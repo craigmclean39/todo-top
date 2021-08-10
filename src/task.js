@@ -1,4 +1,4 @@
-import { format } from 'date-fns';
+import { format, isThisSecond } from 'date-fns';
 
 export class Task {
 
@@ -15,10 +15,13 @@ export class Task {
         this.name = "";
         this.projectId = "";
         this.description = "";
-        this.creationDate = null;
-        this.dueDate = null;
         this.priority = "";
         this.taskId = -1;
+        this.complete = false;
+
+        this.creationDate = null;
+        this.dueDate = null;
+        this.completionDate = null;
     }
 
     //CreateTask
@@ -35,9 +38,25 @@ export class Task {
         this.taskId = Task.#getNewId();
     }
 
+    //Complete Task
+    SetCompletionStatus(comp)
+    {
+        if(comp)
+        {
+            this.completionDate = Date.now();
+            this.complete = true;
+        }
+        else
+        {
+            this.completionDate = null;
+            this.complete = false;
+        }
+        
+    }
+
     get info()
     {
-        return `Task: ${this.name}, Project: ${this.projectId}, Description: ${this.description}, Creation Date: ${format(this.creationDate, "MMMM do y")}, Due Date: ${format(this.dueDate, "MMMM do y")}, Priority: ${this.priority}`;
+        return `Task: ${this.name}, Project: ${this.projectId}, Description: ${this.description}, Creation Date: ${format(this.creationDate, "MMMM do y")}, Due Date: ${format(this.dueDate, "MMMM do y")}, Priority: ${this.priority}, Complete: ${this.complete}`;
     }
 
     //Change Priority
@@ -184,7 +203,7 @@ export class TaskManager {
         return 0;
     }
     //Get Tasks By Creation Date
-    GetTasksByCreationDate()
+    GetTasksByCreationDate(project_id)
     {
         let returnTasks = [];
         if(project_id == undefined)
