@@ -39,3 +39,46 @@ for(let i = 0; i < ts.length; i++)
 {
     console.log(ts[i].info);
 }
+
+console.log("By Priority");
+ts = taskManager.GetTasksByPriority();
+for(let i = 0; i < ts.length; i++)
+{
+    console.log(ts[i].info);
+}
+
+console.log("By Due Date");
+ts = taskManager.GetTasksByDueDate();
+for(let i = 0; i < ts.length; i++)
+{
+    console.log(ts[i].info);
+}
+
+console.log("By Creation Date");
+ts = taskManager.GetTasksByCreationDate();
+for(let i = 0; i < ts.length; i++)
+{
+    console.log(ts[i].info);
+}
+
+console.log("By Project 1");
+ts = taskManager.GetTasksByProject(1);
+for(let i = 0; i < ts.length; i++)
+{
+    console.log(ts[i].info);
+}
+
+console.log("By Project 2");
+ts = taskManager.GetTasksByProject(2);
+for(let i = 0; i < ts.length; i++)
+{
+    console.log(ts[i].info);
+}
+
+console.log("By Priority Project 2");
+ts = taskManager.GetTasksByPriority(2);
+for(let i = 0; i < ts.length; i++)
+{
+    console.log(ts[i].info);
+}
+
