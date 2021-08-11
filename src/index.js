@@ -1,7 +1,9 @@
 import './styles/reset.css';
+import './styles/fonts.css';
 import './styles/styles.css';
 
 import { Task, Project, TaskManager } from "./task";
+import { TaskDom, ProjectPage } from "./taskDom";
 
 import { add } from 'date-fns'
 
@@ -82,3 +84,8 @@ for(let i = 0; i < ts.length; i++)
     console.log(ts[i].info);
 }
 
+
+const taskDom = new TaskDom();
+const projectPage = new ProjectPage();
+
+taskDom.SetPage(projectPage.GetContent());
