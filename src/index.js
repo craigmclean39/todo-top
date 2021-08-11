@@ -90,4 +90,8 @@ const projectPage = new ProjectPage();
 const taskPage = new TaskPage();
 
 taskDom.SetPage(projectPage.GetContent());
-taskDom.SetPage(taskPage.GetContent());
+
+projectPage.SetProjects(taskManager.GetProjectNames(), taskManager.GetProjectIds());
+
+
+//taskDom.SetPage(taskPage.GetContent());

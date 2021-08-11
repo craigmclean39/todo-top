@@ -259,6 +259,30 @@ export class TaskManager {
         return this.projects;
     }
 
+    GetProjectNames()
+    {
+        let projNames = [];
+
+        for(let i = 0; i < this.projects.length; i++)
+        {
+            projNames.push(this.projects[i].projectName);
+        }
+
+        return projNames;
+    }
+
+    GetProjectIds()
+    {
+        let projIds = [];
+
+        for(let i = 0; i < this.projects.length; i++)
+        {
+            projIds.push(this.projects[i].projectId);
+        }
+        
+        return projIds;
+    }
+
     
     //Add Project
     AddProject(project)  {

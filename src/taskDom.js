@@ -1,4 +1,5 @@
 //This will handle the UI of the task app
+import LogoImg from "./media/logo.svg";
 
 class DomHelper {
     constructor() {
@@ -43,15 +44,52 @@ export class ProjectPage {
 
         this._content = DomHelper.CreateElement("div", ["content-wrapper"]);
         this._background = DomHelper.CreateElement("div", ["project-background"]);
-
-        this._background.innerText = "BG";
-
         this._content.appendChild(this._background);
+        this._background.appendChild(this.#CreateHeader());
+    }
+
+    #CreateHeader()
+    {
+        const header = DomHelper.CreateElement("div", ["project-header"]);
+
+        const logo = DomHelper.CreateElement("img", ["project-logo"]);
+        logo.src = LogoImg;
+
+        const title = DomHelper.CreateElement("h1", ["project-title"]);
+        title.innerText = "TASKER";
+
+        header.appendChild(logo);
+        header.appendChild(title);
+
+        return header;
     }
 
     GetContent()
     {
         return this._content;
+    }
+
+    SetProjects(projectNames, projectIds, projectTaskNum)
+    {
+        this._projectNames = projectNames;
+        this._projectIds = projectIds;
+
+        const projectWrapper = DomHelper.CreateElement("div", ["project-wrapper"]);
+        for(let i = 0; i < projectNames.length; i++)
+        {
+            projectWrapper.appendChild(this.#CreateProject(projectNames[i], projectIds[i]));
+        }
+
+        this._background.appendChild(projectWrapper);
+    }
+
+    #CreateProject(projectName, projectId)
+    {
+        const projectDiv = DomHelper.CreateElement("div", ["project-div"]);
+        projectDiv.innerText = projectName;
+        projectDiv.dataset.projectId = projectId;
+
+        return projectDiv;
     }
 }
 
