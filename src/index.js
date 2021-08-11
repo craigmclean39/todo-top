@@ -3,7 +3,7 @@ import './styles/fonts.css';
 import './styles/styles.css';
 
 import { Task, Project, TaskManager } from "./task";
-import { TaskDom, ProjectPage } from "./taskDom";
+import { TaskDom, ProjectPage, TaskPage } from "./taskDom";
 
 import { add } from 'date-fns'
 
@@ -87,5 +87,7 @@ for(let i = 0; i < ts.length; i++)
 
 const taskDom = new TaskDom();
 const projectPage = new ProjectPage();
+const taskPage = new TaskPage();
 
 taskDom.SetPage(projectPage.GetContent());
+taskDom.SetPage(taskPage.GetContent());
