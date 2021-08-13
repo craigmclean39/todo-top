@@ -1,5 +1,6 @@
 //This will handle the UI of the task app
 import LogoImg from "./media/logo.svg";
+import AddImg from "./media/add.svg";
 
 class DomHelper {
     constructor() {
@@ -46,6 +47,7 @@ export class ProjectPage {
         this._background = DomHelper.CreateElement("div", ["project-background"]);
         this._content.appendChild(this._background);
         this._background.appendChild(this.#CreateHeader());
+        this._background.appendChild(this.#CreateFooter());
     }
 
     #CreateHeader()
@@ -62,6 +64,23 @@ export class ProjectPage {
         header.appendChild(title);
 
         return header;
+    }
+
+    #CreateFooter()
+    {
+        const footer = DomHelper.CreateElement("div", ["project-footer"]);
+        const addBtn = DomHelper.CreateElement("input", ["project-add"]);
+        addBtn.setAttribute("type", "image");
+        addBtn.src = AddImg;
+
+        footer.appendChild(addBtn);
+
+        return footer;
+    }
+
+    #CreateAddProjectModal()
+    {
+        
     }
 
     GetContent()
