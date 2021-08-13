@@ -77,17 +77,21 @@ export class ProjectPage {
         const projectWrapper = DomHelper.CreateElement("div", ["project-wrapper"]);
         for(let i = 0; i < projectNames.length; i++)
         {
-            projectWrapper.appendChild(this.#CreateProject(projectNames[i], projectIds[i]));
+            projectWrapper.appendChild(this.#CreateProject(projectNames[i], projectIds[i] ,projectTaskNum[i]));
         }
 
         this._background.appendChild(projectWrapper);
     }
 
-    #CreateProject(projectName, projectId)
+    #CreateProject(projectName, projectId, projectNumTasks)
     {
         const projectDiv = DomHelper.CreateElement("div", ["project-div"]);
-        projectDiv.innerText = projectName;
         projectDiv.dataset.projectId = projectId;
+
+        let title = projectDiv.appendChild(DomHelper.CreateElement("div", ["project-individual-title"]));
+        title.innerText = projectName;
+        let numTasks = projectDiv.appendChild(DomHelper.CreateElement("div", ["project-individual-num-tasks"]));
+        numTasks.innerText = `${projectNumTasks} Tasks`;
 
         return projectDiv;
     }

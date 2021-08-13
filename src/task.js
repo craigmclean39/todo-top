@@ -253,6 +253,19 @@ export class TaskManager {
         return projTasks;
     }
 
+    #GetTaskNumByProject(project_id)
+    {
+        let numTasks = 0;
+        for(let i = 0; i < this.tasks.length; i++)
+        {
+            if(this.tasks[i].projectId == project_id)
+            {
+                numTasks++;
+            }
+        }
+        return numTasks;
+    }
+
     //Get Projects
     GetProjects()
     {
@@ -281,6 +294,16 @@ export class TaskManager {
         }
         
         return projIds;
+    }
+
+    GetProjectTaskNumbers()
+    {
+        let taskNums = [];
+        for(let i = 0; i < this.projects.length; i++)
+        {
+            taskNums.push(this.#GetTaskNumByProject(this.projects[i].projectId));
+        }
+        return taskNums;
     }
 
     

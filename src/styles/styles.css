@@ -49,3 +49,28 @@ body {
      font-size: 4.8rem;
      color: white;
 }
+
+.project-div {
+     background-color: #F8961E;
+     width: 356px;
+     height: 62px;
+     margin: 11px;
+     border-radius: 10px;
+     filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.25));
+}
+
+.project-individual-title {
+     font-family: "Overpass";
+     font-style: bold;
+     font-size: 1.8rem;
+     line-height: 2.8rem;
+     padding-top: 10px;
+     padding-left: 50px;
+}
+
+.project-individual-num-tasks {
+     font-family: "Overpass";
+     font-style: italic;
+     font-size: 1.2rem;
+     padding-left: 50px;
+}
