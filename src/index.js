@@ -12,6 +12,12 @@ const taskManager = new TaskManager();
 
 const p1 = new Project('Home');
 const p2 = new Project('Work');
+/* const p3 = new Project('Home');
+const p4 = new Project('Work');
+const p5 = new Project('Home');
+const p6 = new Project('Work');
+const p7 = new Project('Home');
+const p8 = new Project('Work'); */
 
 const t1 = new Task();
 t1.CreateTask(
@@ -60,6 +66,12 @@ t5.CreateTask(
 
 taskManager.AddProject(p1);
 taskManager.AddProject(p2);
+/* taskManager.AddProject(p3);
+taskManager.AddProject(p4);
+taskManager.AddProject(p5);
+taskManager.AddProject(p6);
+taskManager.AddProject(p7);
+taskManager.AddProject(p8); */
 taskManager.AddTask(t1);
 taskManager.AddTask(t2);
 taskManager.AddTask(t3);

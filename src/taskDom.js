@@ -43,11 +43,16 @@ export class TaskDom {
 export class ProjectPage {
     constructor() {
 
+        this._addProjectModal = null;
+        this.DisplayModal = this.DisplayModal.bind(this);
+
         this._content = DomHelper.CreateElement("div", ["content-wrapper"]);
         this._background = DomHelper.CreateElement("div", ["project-background"]);
         this._content.appendChild(this._background);
         this._background.appendChild(this.#CreateHeader());
         this._background.appendChild(this.#CreateFooter());
+
+        
     }
 
     #CreateHeader()
@@ -68,19 +73,34 @@ export class ProjectPage {
 
     #CreateFooter()
     {
+        const footerWrapper = DomHelper.CreateElement("div", ["project-footer-wrapper"]);
+        const footerModalWrapper = DomHelper.CreateElement("div", ["project-footer-modal-wrapper"]);
         const footer = DomHelper.CreateElement("div", ["project-footer"]);
         const addBtn = DomHelper.CreateElement("input", ["project-add"]);
         addBtn.setAttribute("type", "image");
         addBtn.src = AddImg;
+        addBtn.addEventListener("click", this.DisplayModal);
 
         footer.appendChild(addBtn);
 
-        return footer;
+        footerModalWrapper.appendChild(this.#CreateAddProjectModal());
+
+        footerWrapper.appendChild(footerModalWrapper);
+        footerWrapper.appendChild(footer);
+        
+
+        return footerWrapper;
+    }
+
+    DisplayModal()
+    {
+        this._addProjectModal.style.display = "block";
     }
 
     #CreateAddProjectModal()
     {
-        
+        this._addProjectModal = DomHelper.CreateElement("div", ["project-modal"]);
+        return this._addProjectModal;
     }
 
     GetContent()
