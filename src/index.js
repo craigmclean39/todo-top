@@ -5,13 +5,13 @@ import './styles/styles.css';
 
 import { add } from 'date-fns';
 
-import { Task, Project, TaskManager } from './task';
+import { Task, TaskManager } from './task';
 import { TaskDom, ProjectPage /* , TaskPage */ } from './taskDom';
 
 const taskManager = new TaskManager();
 
-const p1 = new Project('Home');
-const p2 = new Project('Work');
+const p1 = taskManager.AddProject('Home');
+const p2 = taskManager.AddProject('Work');
 /* const p3 = new Project('Home');
 const p4 = new Project('Work');
 const p5 = new Project('Home');
@@ -64,8 +64,6 @@ t5.CreateTask(
   2
 );
 
-taskManager.AddProject(p1);
-taskManager.AddProject(p2);
 /* taskManager.AddProject(p3);
 taskManager.AddProject(p4);
 taskManager.AddProject(p5);
@@ -119,8 +117,8 @@ for (let i = 0; i < ts.length; i++) {
   console.log(ts[i].info);
 }
 
-const taskDom = new TaskDom();
-const projectPage = new ProjectPage();
+const taskDom = new TaskDom(taskManager);
+const projectPage = new ProjectPage(taskManager);
 // const taskPage = new TaskPage();
 
 taskDom.SetPage(projectPage.GetContent());

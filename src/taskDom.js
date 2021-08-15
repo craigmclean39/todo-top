@@ -1,6 +1,7 @@
 //This will handle the UI of the task app
 import LogoImg from "./media/logo.svg";
 import AddImg from "./media/add.svg";
+import { TaskManager } from './task';
 
 class DomHelper {
     constructor() {
@@ -20,10 +21,11 @@ class DomHelper {
 }
 
 export class TaskDom {
-    constructor() {
+    constructor(taskManager) {
 
         this._body = document.querySelector("body");
         this._currentPage = null;
+        this._taskManager = taskManager;
     }
 
     SetPage(page)
@@ -41,10 +43,13 @@ export class TaskDom {
 }
 
 export class ProjectPage {
-    constructor() {
+    constructor(taskManager) {
 
+        this._taskManager = taskManager;
         this._addProjectModal = null;
         this.DisplayModal = this.DisplayModal.bind(this);
+        this.AddProject = this.AddProject.bind(this);
+        this.HideModal = this.HideModal.bind(this);
 
         this._content = DomHelper.CreateElement("div", ["content-wrapper"]);
         this._background = DomHelper.CreateElement("div", ["project-background"]);
@@ -97,10 +102,66 @@ export class ProjectPage {
         this._addProjectModal.style.display = "block";
     }
 
+    HideModal()
+    {
+        this._addProjectModal.style.display = "none";
+        this.#ResetProjectModal();
+    }
+
+    AddProject()
+    {
+        this._taskManager.AddProject(this.#GetProjectModalInput());
+
+        let projects = this._background.querySelector(".project-wrapper");
+        this._background.removeChild(projects);
+
+        this.SetProjects(
+            this._taskManager.GetProjectNames(),
+            this._taskManager.GetProjectIds(),
+            this._taskManager.GetProjectTaskNumbers()
+        )
+
+        this.HideModal();
+    }
+
     #CreateAddProjectModal()
     {
         this._addProjectModal = DomHelper.CreateElement("div", ["project-modal"]);
+
+        let projectNameInput = DomHelper.CreateElement("input", ["project-modal-text-input"]);
+        projectNameInput.type = "text";
+        projectNameInput.defaultValue = "New Project...";
+        projectNameInput.maxLength = 30;
+        this._addProjectModal.appendChild(projectNameInput);
+
+        let buttonWrapper = DomHelper.CreateElement("div", ["project-modal-button-wrapper"]);
+        let addButton = DomHelper.CreateElement("button", ["project-modal-add-button" ,"project-modal-button"]);
+        let cancelButton = DomHelper.CreateElement("button", ["project-modal-cancel-button", "project-modal-button"]);
+
+        addButton.innerText = "OK";
+        cancelButton.innerText = "CANCEL";
+
+        addButton.addEventListener("click", this.AddProject);
+        cancelButton.addEventListener("click", this.HideModal);
+
+        buttonWrapper.appendChild(cancelButton);
+        buttonWrapper.appendChild(addButton);
+        
+
+        this._addProjectModal.appendChild(buttonWrapper);
+
         return this._addProjectModal;
+    }
+
+    #ResetProjectModal()
+    {
+        let text = this._addProjectModal.querySelector(".project-modal-text-input");
+        text.value = "New Project...";
+    }
+
+    #GetProjectModalInput()
+    {
+        return this._addProjectModal.querySelector(".project-modal-text-input").value;
     }
 
     GetContent()

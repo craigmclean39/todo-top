@@ -309,7 +309,9 @@ export class TaskManager {
     
     //Add Project
     AddProject(project)  {
-        this.projects.push(project);
+        let proj = new Project(project);
+        this.projects.push(proj);
+        return proj;
     }
 
     //Add Task
