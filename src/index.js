@@ -6,7 +6,7 @@ import './styles/styles.css';
 import { add } from 'date-fns';
 
 import { Task, TaskManager } from './task';
-import { TaskDom, ProjectPage /* , TaskPage */ } from './taskDom';
+import { TaskDom } from './taskDom';
 
 const taskManager = new TaskManager();
 
@@ -118,15 +118,3 @@ for (let i = 0; i < ts.length; i++) {
 }
 
 const taskDom = new TaskDom(taskManager);
-const projectPage = new ProjectPage(taskManager);
-// const taskPage = new TaskPage();
-
-taskDom.SetPage(projectPage.GetContent());
-
-projectPage.SetProjects(
-  taskManager.GetProjectNames(),
-  taskManager.GetProjectIds(),
-  taskManager.GetProjectTaskNumbers()
-);
-
-// taskDom.SetPage(taskPage.GetContent());

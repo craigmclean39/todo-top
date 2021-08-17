@@ -26,7 +26,19 @@ export class TaskDom {
         this._body = document.querySelector("body");
         this._currentPage = null;
         this._taskManager = taskManager;
+
+        this._projectPage = new ProjectPage(taskManager, this);
+        this._taskPage = new TaskPage(taskManager, this);
+
+        this.SetPage(this._projectPage.GetContent());
+
+        this._projectPage.SetProjects(
+        taskManager.GetProjectNames(),
+        taskManager.GetProjectIds(),
+        taskManager.GetProjectTaskNumbers()
+        );
     }
+
 
     SetPage(page)
     {
@@ -43,9 +55,10 @@ export class TaskDom {
 }
 
 export class ProjectPage {
-    constructor(taskManager) {
+    constructor(taskManager, taskDom) {
 
         this._taskManager = taskManager;
+        this._taskDom = taskDom;
         this._addProjectModal = null;
         this.DisplayModal = this.DisplayModal.bind(this);
         this.AddProject = this.AddProject.bind(this);
@@ -124,6 +137,18 @@ export class ProjectPage {
         this.HideModal();
     }
 
+    SelectProject(evt) 
+    {
+        let target = evt.target;
+        while(!target.classList.contains("project-div"))
+        {
+            target = target.parentElement;
+        }
+        
+        console.dir(target)
+        console.log(target.dataset.projectId);
+    }
+
     #CreateAddProjectModal()
     {
         this._addProjectModal = DomHelper.CreateElement("div", ["project-modal"]);
@@ -193,13 +218,19 @@ export class ProjectPage {
         let numTasks = projectDiv.appendChild(DomHelper.CreateElement("div", ["project-individual-num-tasks"]));
         numTasks.innerText = `${projectNumTasks} Tasks`;
 
+        projectDiv.addEventListener("click", this.SelectProject);
+
         return projectDiv;
     }
+
+    
 }
 
 export class TaskPage {
-    constructor() {
+    constructor(taskManager, taskDom) {
 
+        this._taskDom = taskDom;
+        this._taskManager = taskManager;
         this._content = DomHelper.CreateElement("div", ["content-wrapper"]);
         this._background = DomHelper.CreateElement("div", ["task-background"]);
 
