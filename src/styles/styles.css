@@ -177,3 +177,13 @@ body {
   font-size: 2rem;
   background-color: #f86c25;
 }
+
+.task-back {
+  width: 48px;
+  height: 48px;
+  padding: 28px;
+}
+
+.task-back:hover {
+  filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.25));
+}

@@ -1,6 +1,7 @@
 //This will handle the UI of the task app
 import LogoImg from "./media/logo.svg";
 import AddImg from "./media/add.svg";
+import BackArrow from "./media/back-arrow.svg";
 import { TaskManager } from './task';
 
 class DomHelper {
@@ -30,15 +31,30 @@ export class TaskDom {
         this._projectPage = new ProjectPage(taskManager, this);
         this._taskPage = new TaskPage(taskManager, this);
 
-        this.SetPage(this._projectPage.GetContent());
+        this.GoToProjectPage();
 
-        this._projectPage.SetProjects(
-        taskManager.GetProjectNames(),
-        taskManager.GetProjectIds(),
-        taskManager.GetProjectTaskNumbers()
-        );
+        
     }
 
+    SelectProject(projectId)
+    {
+        this.GoToTaskPage();
+    }
+
+    GoToProjectPage()
+    {
+        this.SetPage(this._projectPage.GetContent());
+        this._projectPage.SetProjects(
+            this._taskManager.GetProjectNames(),
+            this._taskManager.GetProjectIds(),
+            this._taskManager.GetProjectTaskNumbers()
+            );
+    }
+
+    GoToTaskPage()
+    {
+        this.SetPage(this._taskPage.GetContent());
+    }
 
     SetPage(page)
     {
@@ -60,9 +76,12 @@ export class ProjectPage {
         this._taskManager = taskManager;
         this._taskDom = taskDom;
         this._addProjectModal = null;
+
+        //Bind this to internal eventhandlers
         this.DisplayModal = this.DisplayModal.bind(this);
         this.AddProject = this.AddProject.bind(this);
         this.HideModal = this.HideModal.bind(this);
+        this.SelectProject = this.SelectProject.bind(this);
 
         this._content = DomHelper.CreateElement("div", ["content-wrapper"]);
         this._background = DomHelper.CreateElement("div", ["project-background"]);
@@ -144,9 +163,8 @@ export class ProjectPage {
         {
             target = target.parentElement;
         }
-        
-        console.dir(target)
-        console.log(target.dataset.projectId);
+
+        this._taskDom.SelectProject(target.dataset.projectId);
     }
 
     #CreateAddProjectModal()
@@ -199,7 +217,14 @@ export class ProjectPage {
         this._projectNames = projectNames;
         this._projectIds = projectIds;
 
-        const projectWrapper = DomHelper.CreateElement("div", ["project-wrapper"]);
+        let projectWrapper = this._background.querySelector(".project-wrapper");
+
+        if(projectWrapper != undefined)
+        {
+            this._background.removeChild(projectWrapper);
+        }
+
+        projectWrapper = DomHelper.CreateElement("div", ["project-wrapper"]);
         for(let i = 0; i < projectNames.length; i++)
         {
             projectWrapper.appendChild(this.#CreateProject(projectNames[i], projectIds[i] ,projectTaskNum[i]));
@@ -231,12 +256,38 @@ export class TaskPage {
 
         this._taskDom = taskDom;
         this._taskManager = taskManager;
+
+        this.GoBackToProjectPage = this.GoBackToProjectPage.bind(this);
+
         this._content = DomHelper.CreateElement("div", ["content-wrapper"]);
         this._background = DomHelper.CreateElement("div", ["task-background"]);
-
-        this._background.innerText = "Tasks";
-
         this._content.appendChild(this._background);
+        this._background.appendChild(this.#CreateHeader());
+        //this._background.appendChild(this.#CreateFooter());
+
+    }
+
+    GoBackToProjectPage()
+    {
+        this._taskDom.GoToProjectPage();
+    }
+
+    #CreateHeader()
+    {
+        const header = DomHelper.CreateElement("div", ["project-header"]);
+
+        const backBtn = DomHelper.CreateElement("input", ["task-back"]);
+        backBtn.setAttribute("type", "image");
+        backBtn.src = BackArrow;
+        backBtn.addEventListener("click", this.GoBackToProjectPage);
+
+        const title = DomHelper.CreateElement("h1", ["project-title"]);
+        title.innerText = "Project Title";
+
+        header.appendChild(backBtn);
+        header.appendChild(title);
+
+        return header;
     }
 
     GetContent()
