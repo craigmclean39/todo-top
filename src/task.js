@@ -12,28 +12,28 @@ export class Task {
 
     constructor()
     {
-        this.name = "";
+        this.taskName = "";
         this.projectId = "";
-        this.description = "";
-        this.priority = "";
+        this.taskDescription = "";
+        this.taskPriority = "";
         this.taskId = -1;
-        this.complete = false;
+        this.taskComplete = false;
 
-        this.creationDate = null;
-        this.dueDate = null;
-        this.completionDate = null;
+        this.taskCreationDate = null;
+        this.taskDueDate = null;
+        this.taskCompletionDate = null;
     }
 
     //CreateTask
     CreateTask(name, projectId, description, dueDate, priority)
     {
-        this.name = name;
+        this.taskName = name;
         this.projectId = projectId;
-        this.description = description;
-        this.dueDate = dueDate;
-        this.priority = priority;
+        this.taskDescription = description;
+        this.taskDueDate = dueDate;
+        this.taskPriority = priority;
 
-        this.creationDate = Date.now();
+        this.taskCreationDate = Date.now();
         
         this.taskId = Task.#getNewId();
     }
@@ -43,21 +43,62 @@ export class Task {
     {
         if(comp)
         {
-            this.completionDate = Date.now();
-            this.complete = true;
+            this.taskCompletionDate = Date.now();
+            this.taskComplete = true;
         }
         else
         {
-            this.completionDate = null;
-            this.complete = false;
+            this.taskCompletionDate = null;
+            this.taskComplete = false;
         }
         
     }
 
     get info()
     {
-        return `Task: ${this.name}, Project: ${this.projectId}, Description: ${this.description}, Creation Date: ${format(this.creationDate, "MMMM do y")}, Due Date: ${format(this.dueDate, "MMMM do y")}, Priority: ${this.priority}, Complete: ${this.complete}`;
+        return `Task: ${this.taskName}, Project: ${this.projectId}, Description: ${this.taskDescription}, Creation Date: ${format(this.taskCreationDate, "MMMM do y")}, Due Date: ${format(this.taskDueDate, "MMMM do y")}, Priority: ${this.taskPriority}, Complete: ${this.taskComplete}`;
     }
+
+    get id()
+    {
+        return this.taskId;
+    }
+
+    get name()
+    {
+        return this.taskName;
+    }
+
+    get description()
+    {
+        return this.taskDescription;
+    }
+
+    get priority()
+    {
+        return this.taskPriority;
+    }
+
+    get completionStatus()
+    {
+        return this.taskComplete;
+    }
+
+    get creationDate()
+    {
+        return this.taskCreationDate;
+    }
+
+    get dueDate()
+    {
+        return this.taskDueDate;
+    }
+
+    get completionDate()
+    {
+        return this.taskCompletionDate;
+    }
+    
 
     //Change Priority
     //Set DueDate
@@ -304,6 +345,19 @@ export class TaskManager {
             taskNums.push(this.#GetTaskNumByProject(this.projects[i].projectId));
         }
         return taskNums;
+    }
+
+    GetProjectNameById(projectId)
+    {
+        for(let i = 0; i < this.projects.length; i++)
+        {
+            if(this.projects[i].projectId == projectId)
+            {
+                return this.projects[i].projectName;
+            }
+        }
+
+        return undefined;
     }
 
     

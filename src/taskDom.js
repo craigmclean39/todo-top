@@ -2,6 +2,7 @@
 import LogoImg from "./media/logo.svg";
 import AddImg from "./media/add.svg";
 import BackArrow from "./media/back-arrow.svg";
+import { format } from 'date-fns';
 import { TaskManager } from './task';
 
 class DomHelper {
@@ -38,7 +39,9 @@ export class TaskDom {
 
     SelectProject(projectId)
     {
-        this.GoToTaskPage();
+        const tasks = this._taskManager.GetTasksByCreationDate(projectId);
+        const projectName = this._taskManager.GetProjectNameById(projectId);
+        this.GoToTaskPage(projectName, projectId, tasks);
     }
 
     GoToProjectPage()
@@ -51,8 +54,10 @@ export class TaskDom {
             );
     }
 
-    GoToTaskPage()
+    GoToTaskPage(projectName, projectId, tasks)
     {
+        this._taskPage.SetProject(projectName, projectId, tasks);
+        this._taskPage.SetTasks();
         this.SetPage(this._taskPage.GetContent());
     }
 
@@ -85,7 +90,9 @@ export class ProjectPage {
 
         this._content = DomHelper.CreateElement("div", ["content-wrapper"]);
         this._background = DomHelper.CreateElement("div", ["project-background"]);
+        this._overlay = DomHelper.CreateElement("div", ["overlay"]);
         this._content.appendChild(this._background);
+        this._content.appendChild(this._overlay);
         this._background.appendChild(this.#CreateHeader());
         this._background.appendChild(this.#CreateFooter());
 
@@ -132,12 +139,15 @@ export class ProjectPage {
     DisplayModal()
     {
         this._addProjectModal.style.display = "block";
+        this._overlay.classList.add("blur-overlay");
     }
 
     HideModal()
     {
         this._addProjectModal.style.display = "none";
         this.#ResetProjectModal();
+
+        this._overlay.classList.remove("blur-overlay");
     }
 
     AddProject()
@@ -173,7 +183,7 @@ export class ProjectPage {
 
         let projectNameInput = DomHelper.CreateElement("input", ["project-modal-text-input"]);
         projectNameInput.type = "text";
-        projectNameInput.defaultValue = "New Project...";
+        projectNameInput.placeholder = "New Project...";
         projectNameInput.maxLength = 30;
         this._addProjectModal.appendChild(projectNameInput);
 
@@ -199,7 +209,7 @@ export class ProjectPage {
     #ResetProjectModal()
     {
         let text = this._addProjectModal.querySelector(".project-modal-text-input");
-        text.value = "New Project...";
+        text.value = "";
     }
 
     #GetProjectModalInput()
@@ -263,9 +273,56 @@ export class TaskPage {
         this._background = DomHelper.CreateElement("div", ["task-background"]);
         this._content.appendChild(this._background);
         this._background.appendChild(this.#CreateHeader());
-        //this._background.appendChild(this.#CreateFooter());
+        this._background.appendChild(this.#CreateFooter());
 
     }
+
+    SetProject(projectName, projectId, tasks)
+    {
+        this._projectName = projectName;
+        this._projectId = projectId;
+        this._tasks = tasks;
+
+        const title = this._background.querySelector(".project-title");
+        title.innerText = projectName.toUpperCase();
+    }
+
+    SetTasks()
+    {
+        let taskWrapper = this._background.querySelector(".task-wrapper");
+
+        if(taskWrapper != undefined)
+        {
+            this._background.removeChild(taskWrapper);
+        }
+
+        taskWrapper = DomHelper.CreateElement("div", ["task-wrapper"]);
+        for(let i = 0; i < this._tasks.length; i++)
+        {
+            taskWrapper.appendChild(this.#CreateTask(this._tasks[i]));
+        }
+
+
+        this._background.appendChild(taskWrapper);
+
+    }
+
+    #CreateTask(task)
+    {
+        const taskDiv = DomHelper.CreateElement("div", ["task-div"]);
+        taskDiv.dataset.taskId = task.id;
+
+        let title = taskDiv.appendChild(DomHelper.CreateElement("div", ["task-individual-title"]));
+        title.innerText = task.name;
+
+        let dueDate = taskDiv.appendChild(DomHelper.CreateElement("div", ["task-due-date"]));
+        dueDate.innerText = `Due: ${format(task.dueDate, "PPPP")}`;
+
+        //taskDiv.addEventListener("click", this.SelectProject);
+
+        return taskDiv;
+    }
+
 
     GoBackToProjectPage()
     {
@@ -288,6 +345,21 @@ export class TaskPage {
         header.appendChild(title);
 
         return header;
+    }
+
+    #CreateFooter()
+    {
+        const footerWrapper = DomHelper.CreateElement("div", ["project-footer-wrapper"]);
+        const footer = DomHelper.CreateElement("div", ["project-footer"]);
+        const addBtn = DomHelper.CreateElement("input", ["project-add"]);
+        addBtn.setAttribute("type", "image");
+        addBtn.src = AddImg;
+        //addBtn.addEventListener("click", this.DisplayModal);
+
+        footer.appendChild(addBtn);
+        footerWrapper.appendChild(footer);
+        
+        return footerWrapper;
     }
 
     GetContent()
