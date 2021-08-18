@@ -53,7 +53,7 @@ taskManager.AddTask(
   2
 );
 
-let ts = taskManager.GetAllTasks();
+/* let ts = taskManager.GetAllTasks();
 for (let i = 0; i < ts.length; i++) {
   console.log(ts[i].info);
 }
@@ -92,7 +92,7 @@ console.log('By Priority Project 2');
 ts = taskManager.GetTasksByPriority(2);
 for (let i = 0; i < ts.length; i++) {
   console.log(ts[i].info);
-}
+} */
 
 // eslint-disable-next-line no-unused-vars
 const taskDom = new TaskDom(taskManager);

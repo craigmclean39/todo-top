@@ -191,6 +191,7 @@ export class TaskPage {
     {
         this.ResetModal();
         this._addTaskModalWrapper.style.display = "flex";
+        this._addTaskModal.querySelector(".task-modal-name-input").focus();
         this._overlay.classList.add("blur-overlay");
     }
 

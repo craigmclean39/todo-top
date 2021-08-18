@@ -63,6 +63,7 @@ export class ProjectPage {
     DisplayModal()
     {
         this._footerModalWrapper.style.display = "flex";
+        this._addProjectModal.querySelector(".project-modal-text-input").focus();
         this._overlay.classList.add("blur-overlay");
     }
 
