@@ -369,8 +369,10 @@ export class TaskManager {
     }
 
     //Add Task
-    AddTask(task)
+    AddTask(taskTitle, taskDesc, projectId, dueDate, priority)
     {
+        let task = new Task();
+        task.CreateTask(taskTitle, projectId, taskDesc, dueDate, priority);
         this.tasks.push(task);
     }
 }
