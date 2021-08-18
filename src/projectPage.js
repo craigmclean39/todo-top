@@ -23,6 +23,8 @@ export class ProjectPage {
         this._background.appendChild(this.#CreateHeader());
         this._background.appendChild(this.#CreateFooter());
 
+        this._content.appendChild(this.#CreateAddProjectModal());
+
         
     }
 
@@ -45,7 +47,6 @@ export class ProjectPage {
     #CreateFooter()
     {
         const footerWrapper = DomHelper.CreateElement("div", ["project-footer-wrapper"]);
-        const footerModalWrapper = DomHelper.CreateElement("div", ["project-footer-modal-wrapper"]);
         const footer = DomHelper.CreateElement("div", ["project-footer"]);
         const addBtn = DomHelper.CreateElement("input", ["project-add"]);
         addBtn.setAttribute("type", "image");
@@ -53,10 +54,6 @@ export class ProjectPage {
         addBtn.addEventListener("click", this.DisplayModal);
 
         footer.appendChild(addBtn);
-
-        footerModalWrapper.appendChild(this.#CreateAddProjectModal());
-
-        footerWrapper.appendChild(footerModalWrapper);
         footerWrapper.appendChild(footer);
         
 
@@ -65,13 +62,13 @@ export class ProjectPage {
 
     DisplayModal()
     {
-        this._addProjectModal.style.display = "block";
+        this._footerModalWrapper.style.display = "flex";
         this._overlay.classList.add("blur-overlay");
     }
 
     HideModal()
     {
-        this._addProjectModal.style.display = "none";
+        this._footerModalWrapper.style.display = "none";
         this.#ResetProjectModal();
 
         this._overlay.classList.remove("blur-overlay");
@@ -106,6 +103,7 @@ export class ProjectPage {
 
     #CreateAddProjectModal()
     {
+        this._footerModalWrapper = DomHelper.CreateElement("div", ["project-footer-modal-wrapper"]);
         this._addProjectModal = DomHelper.CreateElement("div", ["project-modal"]);
 
         let projectNameInput = DomHelper.CreateElement("input", ["project-modal-text-input"]);
@@ -129,8 +127,9 @@ export class ProjectPage {
         
 
         this._addProjectModal.appendChild(buttonWrapper);
+        this._footerModalWrapper.appendChild(this._addProjectModal);
 
-        return this._addProjectModal;
+        return this._footerModalWrapper;
     }
 
     #ResetProjectModal()

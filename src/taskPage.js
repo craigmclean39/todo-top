@@ -220,6 +220,7 @@ export class TaskPage {
 
         this._taskManager.AddTask(input.taskName, input.taskDesc, input.projectId, new Date(input.taskDate), input.taskPriority);
 
+        this.#RefreshTasks();
         this.HideModal();
     }
 
@@ -232,6 +233,12 @@ export class TaskPage {
             taskDate: this._addTaskModal.querySelector(".task-modal-date-input").value,
             taskPriority:this._addTaskModal.querySelector(".task-modal-priority-input").value
         };
+    }
+
+    #RefreshTasks()
+    {
+        this._tasks = this._taskManager.GetTasksByCreationDate(this._projectId);
+        this.SetTasks();
     }
 
     GetContent()
