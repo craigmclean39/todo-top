@@ -3,9 +3,7 @@ import './styles/reset.css';
 import './styles/fonts.css';
 import './styles/styles.css';
 
-import { add } from 'date-fns';
-
-import { Task, TaskManager } from './task';
+import { TaskManager } from './taskManager';
 import { TaskDom } from './taskDom';
 
 const taskManager = new TaskManager();

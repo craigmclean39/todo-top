@@ -1,248 +1,265 @@
-import BackArrow from "./media/back-arrow.svg";
-import AddImg from "./media/add.svg";
+/* eslint-disable import/prefer-default-export */
 import { format, add } from 'date-fns';
-import { DomHelper } from "./domHelper";
+import { DomHelper } from './domHelper';
+import BackArrow from './media/back-arrow.svg';
+import AddImg from './media/add.svg';
 
 export class TaskPage {
-    constructor(taskManager, taskDom) {
+  constructor(taskManager, taskDom) {
+    this._taskDom = taskDom;
+    this._taskManager = taskManager;
 
-        this._taskDom = taskDom;
-        this._taskManager = taskManager;
+    this.GoBackToProjectPage = this.GoBackToProjectPage.bind(this);
+    this.DisplayModal = this.DisplayModal.bind(this);
+    this.HideModal = this.HideModal.bind(this);
+    this.AddTask = this.AddTask.bind(this);
 
-        this.GoBackToProjectPage = this.GoBackToProjectPage.bind(this);
-        this.DisplayModal = this.DisplayModal.bind(this);
-        this.HideModal = this.HideModal.bind(this);
-        this.AddTask = this.AddTask.bind(this);
+    this._content = DomHelper.CreateElement('div', ['content-wrapper']);
+    this._background = DomHelper.CreateElement('div', ['task-background']);
+    this._content.appendChild(this._background);
+    this._overlay = DomHelper.CreateElement('div', ['overlay']);
+    this._content.appendChild(this._overlay);
 
-        this._content = DomHelper.CreateElement("div", ["content-wrapper"]);
-        this._background = DomHelper.CreateElement("div", ["task-background"]);
-        this._content.appendChild(this._background);
-        this._overlay = DomHelper.CreateElement("div", ["overlay"]);
-        this._content.appendChild(this._overlay);
+    this._background.appendChild(this.CreateHeader());
+    this._background.appendChild(this.CreateFooter());
+    this._content.appendChild(this.CreateAddTaskModal());
+  }
 
-        this._background.appendChild(this.#CreateHeader());
-        this._background.appendChild(this.#CreateFooter());
-        this._content.appendChild(this.#CreateAddTaskModal());
+  SetProject(projectName, projectId, tasks) {
+    this._projectName = projectName;
+    this._projectId = projectId;
+    this._tasks = tasks;
 
+    const title = this._background.querySelector('.project-title');
+    title.innerText = projectName.toUpperCase();
+  }
+
+  SetTasks() {
+    let taskWrapper = this._background.querySelector('.task-wrapper');
+
+    if (taskWrapper !== undefined && taskWrapper !== null) {
+      this._background.removeChild(taskWrapper);
     }
 
-    SetProject(projectName, projectId, tasks)
-    {
-        this._projectName = projectName;
-        this._projectId = projectId;
-        this._tasks = tasks;
-
-        const title = this._background.querySelector(".project-title");
-        title.innerText = projectName.toUpperCase();
+    taskWrapper = DomHelper.CreateElement('div', ['task-wrapper']);
+    for (let i = 0; i < this._tasks.length; i++) {
+      taskWrapper.appendChild(TaskPage.CreateTask(this._tasks[i]));
     }
 
-    SetTasks()
-    {
-        let taskWrapper = this._background.querySelector(".task-wrapper");
+    this._background.appendChild(taskWrapper);
+  }
 
-        if(taskWrapper != undefined)
-        {
-            this._background.removeChild(taskWrapper);
-        }
+  static CreateTask(task) {
+    const taskDiv = DomHelper.CreateElement('div', ['task-div']);
+    taskDiv.dataset.taskId = task.id;
 
-        taskWrapper = DomHelper.CreateElement("div", ["task-wrapper"]);
-        for(let i = 0; i < this._tasks.length; i++)
-        {
-            taskWrapper.appendChild(this.#CreateTask(this._tasks[i]));
-        }
+    const title = taskDiv.appendChild(
+      DomHelper.CreateElement('div', ['task-individual-title'])
+    );
+    title.innerText = task.name;
 
+    const dueDate = taskDiv.appendChild(
+      DomHelper.CreateElement('div', ['task-due-date'])
+    );
+    dueDate.innerText = `Due: ${format(task.dueDate, 'PPPP')}`;
+    // dueDate.innerText = task.dueDate;
 
-        this._background.appendChild(taskWrapper);
+    return taskDiv;
+  }
 
-    }
+  GoBackToProjectPage() {
+    this._taskDom.GoToProjectPage();
+  }
 
-    #CreateTask(task)
-    {
-        const taskDiv = DomHelper.CreateElement("div", ["task-div"]);
-        taskDiv.dataset.taskId = task.id;
+  CreateHeader() {
+    const header = DomHelper.CreateElement('div', ['project-header']);
 
-        let title = taskDiv.appendChild(DomHelper.CreateElement("div", ["task-individual-title"]));
-        title.innerText = task.name;
+    const backBtn = DomHelper.CreateElement('input', ['task-back']);
+    backBtn.setAttribute('type', 'image');
+    backBtn.src = BackArrow;
+    backBtn.addEventListener('click', this.GoBackToProjectPage);
 
-        let dueDate = taskDiv.appendChild(DomHelper.CreateElement("div", ["task-due-date"]));
-        dueDate.innerText = `Due: ${format(task.dueDate, "PPPP")}`;
-        //dueDate.innerText = task.dueDate;
+    const title = DomHelper.CreateElement('h1', ['project-title']);
+    title.innerText = 'Project Title';
 
-        return taskDiv;
-    }
+    header.appendChild(backBtn);
+    header.appendChild(title);
 
+    return header;
+  }
 
-    GoBackToProjectPage()
-    {
-        this._taskDom.GoToProjectPage();
-    }
+  CreateFooter() {
+    const footerWrapper = DomHelper.CreateElement('div', [
+      'project-footer-wrapper',
+    ]);
+    const footer = DomHelper.CreateElement('div', ['project-footer']);
+    const addBtn = DomHelper.CreateElement('input', ['project-add']);
+    addBtn.setAttribute('type', 'image');
+    addBtn.src = AddImg;
+    addBtn.addEventListener('click', this.DisplayModal);
 
-    #CreateHeader()
-    {
-        const header = DomHelper.CreateElement("div", ["project-header"]);
+    footer.appendChild(addBtn);
+    footerWrapper.appendChild(footer);
 
-        const backBtn = DomHelper.CreateElement("input", ["task-back"]);
-        backBtn.setAttribute("type", "image");
-        backBtn.src = BackArrow;
-        backBtn.addEventListener("click", this.GoBackToProjectPage);
+    return footerWrapper;
+  }
 
-        const title = DomHelper.CreateElement("h1", ["project-title"]);
-        title.innerText = "Project Title";
+  CreateAddTaskModal() {
+    this._addTaskModalWrapper = DomHelper.CreateElement('div', [
+      'add-task-modal-wrapper',
+    ]);
+    this._addTaskModal = DomHelper.CreateElement('div', ['add-task-modal']);
 
-        header.appendChild(backBtn);
-        header.appendChild(title);
+    const taskNameInput = DomHelper.CreateElement('input', [
+      'task-modal-name-input',
+    ]);
+    taskNameInput.type = 'text';
+    taskNameInput.placeholder = 'Task Name...';
+    taskNameInput.maxLength = 40;
+    this._addTaskModal.appendChild(taskNameInput);
 
-        return header;
-    }
+    const taskDescInput = DomHelper.CreateElement('textarea', [
+      'task-modal-desc-input',
+    ]);
+    taskDescInput.resize = 'none';
+    taskDescInput.placeholder = 'Description...';
+    taskDescInput.maxLength = 400;
+    this._addTaskModal.appendChild(taskDescInput);
 
-    #CreateFooter()
-    {
-        const footerWrapper = DomHelper.CreateElement("div", ["project-footer-wrapper"]);
-        const footer = DomHelper.CreateElement("div", ["project-footer"]);
-        const addBtn = DomHelper.CreateElement("input", ["project-add"]);
-        addBtn.setAttribute("type", "image");
-        addBtn.src = AddImg;
-        addBtn.addEventListener("click", this.DisplayModal);
+    const taskDatePriorityWrapper = DomHelper.CreateElement('div', [
+      'task-modal-datepriority-wrapper',
+    ]);
 
-        footer.appendChild(addBtn);
-        footerWrapper.appendChild(footer);
-        
-        return footerWrapper;
-    }
+    const taskDueDate = DomHelper.CreateElement('input', [
+      'task-modal-date-input',
+    ]);
+    taskDueDate.type = 'datetime-local';
+    const currentDate = Date.now();
+    const formattedDate = format(currentDate, 'yyyy-MM-dd');
+    const formattedTime = format(currentDate, 'HH:mm');
 
-    #CreateAddTaskModal()
-    {
-        this._addTaskModalWrapper = DomHelper.CreateElement("div", ["add-task-modal-wrapper"]);
-        this._addTaskModal = DomHelper.CreateElement("div", ["add-task-modal"]);
+    const timeValue = `${formattedDate}T${formattedTime}`;
+    taskDueDate.value = timeValue;
+    taskDueDate.min = timeValue;
 
-        let taskNameInput = DomHelper.CreateElement("input", ["task-modal-name-input"]);
-        taskNameInput.type = "text";
-        taskNameInput.placeholder = "Task Name...";
-        taskNameInput.maxLength = 40;
-        this._addTaskModal.appendChild(taskNameInput);
+    const futureDate = add(currentDate, { years: 10 });
+    const formattedFutureDate = format(futureDate, 'yyyy-MM-dd');
+    const formattedFutureTime = format(futureDate, 'HH:mm');
+    const timeFutureValue = `${formattedFutureDate}T${formattedFutureTime}`;
+    taskDueDate.max = timeFutureValue;
 
-        let taskDescInput = DomHelper.CreateElement("textarea", ["task-modal-desc-input"]);
-        taskDescInput.resize = "none";
-        taskDescInput.placeholder = "Description...";
-        taskDescInput.maxLength = 400;
-        this._addTaskModal.appendChild(taskDescInput);
+    taskDatePriorityWrapper.appendChild(taskDueDate);
 
+    const priorityInput = DomHelper.CreateElement('select', [
+      'task-modal-priority-input',
+    ]);
+    const lowP = DomHelper.CreateElement('option');
+    const medP = DomHelper.CreateElement('option');
+    const highP = DomHelper.CreateElement('option');
+    lowP.value = 0;
+    lowP.innerText = 'Low';
+    medP.value = 1;
+    medP.innerText = 'Medium';
+    highP.value = 2;
+    highP.innerText = 'High';
+    priorityInput.appendChild(lowP);
+    priorityInput.appendChild(medP);
+    priorityInput.appendChild(highP);
 
-        let taskDatePriorityWrapper = DomHelper.CreateElement("div", ["task-modal-datepriority-wrapper"]);
+    taskDatePriorityWrapper.appendChild(priorityInput);
 
-        let taskDueDate = DomHelper.CreateElement("input", ["task-modal-date-input"]);
-        taskDueDate.type = "datetime-local";
-        const currentDate = Date.now();
-        const formattedDate = format(currentDate, 'yyyy-MM-dd');
-        const formattedTime = format(currentDate, 'HH:mm');
+    this._addTaskModal.appendChild(taskDatePriorityWrapper);
 
-        const timeValue = `${formattedDate}T${formattedTime}`;
-        taskDueDate.value = timeValue;
-        taskDueDate.min = timeValue;
+    const buttonWrapper = DomHelper.CreateElement('div', [
+      'project-modal-button-wrapper',
+    ]);
+    const addButton = DomHelper.CreateElement('button', [
+      'project-modal-add-button',
+      'project-modal-button',
+    ]);
+    const cancelButton = DomHelper.CreateElement('button', [
+      'project-modal-cancel-button',
+      'project-modal-button',
+    ]);
 
-        const futureDate = add(currentDate, { years: 10 });
-        const formattedFutureDate = format(futureDate, 'yyyy-MM-dd');
-        const formattedFutureTime = format(futureDate, 'HH:mm');
-        const timeFutureValue = `${formattedFutureDate}T${formattedFutureTime}`;
-        taskDueDate.max = timeFutureValue;
+    addButton.innerText = 'OK';
+    cancelButton.innerText = 'CANCEL';
 
-        taskDatePriorityWrapper.appendChild(taskDueDate);
+    addButton.addEventListener('click', this.AddTask);
+    cancelButton.addEventListener('click', this.HideModal);
 
-        let priorityInput = DomHelper.CreateElement("select", ["task-modal-priority-input"]);
-        let lowP = DomHelper.CreateElement("option");
-        let medP = DomHelper.CreateElement("option");
-        let highP = DomHelper.CreateElement("option");
-        lowP.value = 0;
-        lowP.innerText = "Low";
-        medP.value = 1;
-        medP.innerText = "Medium";
-        highP.value = 2;
-        highP.innerText = "High";
-        priorityInput.appendChild(lowP);
-        priorityInput.appendChild(medP);
-        priorityInput.appendChild(highP);
+    buttonWrapper.appendChild(cancelButton);
+    buttonWrapper.appendChild(addButton);
 
-        taskDatePriorityWrapper.appendChild(priorityInput);
+    this._addTaskModal.appendChild(buttonWrapper);
+    this._addTaskModalWrapper.appendChild(this._addTaskModal);
 
-        this._addTaskModal.appendChild(taskDatePriorityWrapper);
+    return this._addTaskModalWrapper;
+  }
 
-        let buttonWrapper = DomHelper.CreateElement("div", ["project-modal-button-wrapper"]);
-        let addButton = DomHelper.CreateElement("button", ["project-modal-add-button" ,"project-modal-button"]);
-        let cancelButton = DomHelper.CreateElement("button", ["project-modal-cancel-button", "project-modal-button"]);
+  DisplayModal() {
+    this.ResetModal();
+    this._addTaskModalWrapper.style.display = 'flex';
+    this._addTaskModal.querySelector('.task-modal-name-input').focus();
+    this._overlay.classList.add('blur-overlay');
+  }
 
-        addButton.innerText = "OK";
-        cancelButton.innerText = "CANCEL";
+  HideModal() {
+    this._addTaskModalWrapper.style.display = 'none';
+    // this.#ResetProjectModal();
 
-        addButton.addEventListener("click", this.AddTask);
-        cancelButton.addEventListener("click", this.HideModal);
+    this._overlay.classList.remove('blur-overlay');
+  }
 
-        buttonWrapper.appendChild(cancelButton);
-        buttonWrapper.appendChild(addButton);
-        
+  ResetModal() {
+    this._addTaskModal.querySelector('.task-modal-name-input').value = '';
+    this._addTaskModal.querySelector('.task-modal-desc-input').value = '';
 
-        this._addTaskModal.appendChild(buttonWrapper);
-        this._addTaskModalWrapper.appendChild(this._addTaskModal);
+    const currentDate = Date.now();
+    const formattedDate = format(currentDate, 'yyyy-MM-dd');
+    const formattedTime = format(currentDate, 'HH:mm');
 
-        return this._addTaskModalWrapper;
-    }
+    this._addTaskModal.querySelector(
+      '.task-modal-date-input'
+    ).value = `${formattedDate}T${formattedTime}`;
+  }
 
-    DisplayModal()
-    {
-        this.ResetModal();
-        this._addTaskModalWrapper.style.display = "flex";
-        this._addTaskModal.querySelector(".task-modal-name-input").focus();
-        this._overlay.classList.add("blur-overlay");
-    }
+  AddTask() {
+    const input = this.GetTaskModalInput();
 
-    HideModal()
-    {
-        this._addTaskModalWrapper.style.display = "none";
-        //this.#ResetProjectModal();
+    this._taskManager.AddTask(
+      input.taskName,
+      input.taskDesc,
+      input.projectId,
+      new Date(input.taskDate),
+      input.taskPriority
+    );
 
-        this._overlay.classList.remove("blur-overlay");
-    }
+    this.RefreshTasks();
+    this.HideModal();
+  }
 
-    ResetModal()
-    {
-        this._addTaskModal.querySelector(".task-modal-name-input").value = "";
-        this._addTaskModal.querySelector(".task-modal-desc-input").value = "";
+  GetTaskModalInput() {
+    return {
+      projectId: this._projectId,
+      taskName: this._addTaskModal.querySelector('.task-modal-name-input')
+        .value,
+      taskDesc: this._addTaskModal.querySelector('.task-modal-desc-input')
+        .value,
+      taskDate: this._addTaskModal.querySelector('.task-modal-date-input')
+        .value,
+      taskPriority: this._addTaskModal.querySelector(
+        '.task-modal-priority-input'
+      ).value,
+    };
+  }
 
-        const currentDate = Date.now();
-        const formattedDate = format(currentDate, 'yyyy-MM-dd');
-        const formattedTime = format(currentDate, 'HH:mm');
+  RefreshTasks() {
+    this._tasks = this._taskManager.GetTasksByCreationDate(this._projectId);
+    this.SetTasks();
+  }
 
-        this._addTaskModal.querySelector(".task-modal-date-input").value = `${formattedDate}T${formattedTime}`;
-    }
-
-    AddTask()
-    {
-        let input = this.#GetTaskModalInput();
-
-        this._taskManager.AddTask(input.taskName, input.taskDesc, input.projectId, new Date(input.taskDate), input.taskPriority);
-
-        this.#RefreshTasks();
-        this.HideModal();
-    }
-
-    #GetTaskModalInput()
-    {
-        return {
-            projectId: this._projectId,
-            taskName: this._addTaskModal.querySelector(".task-modal-name-input").value,
-            taskDesc: this._addTaskModal.querySelector(".task-modal-desc-input").value,
-            taskDate: this._addTaskModal.querySelector(".task-modal-date-input").value,
-            taskPriority:this._addTaskModal.querySelector(".task-modal-priority-input").value
-        };
-    }
-
-    #RefreshTasks()
-    {
-        this._tasks = this._taskManager.GetTasksByCreationDate(this._projectId);
-        this.SetTasks();
-    }
-
-    GetContent()
-    {
-        return this._content;
-    }
+  GetContent() {
+    return this._content;
+  }
 }

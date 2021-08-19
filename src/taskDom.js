@@ -1,7 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 // This will handle the UI of the task app
 
-import { TaskManager } from './task';
 import { ProjectPage } from './projectPage';
 import { TaskPage } from './taskPage';
 

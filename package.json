@@ -12,6 +12,7 @@
     "webpack-cli": "^4.7.2"
   },
   "devDependencies": {
+    "@babel/eslint-parser": "^7.15.0",
     "eslint": "^7.32.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-node": "^4.1.0",
