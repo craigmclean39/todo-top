@@ -1,5 +1,6 @@
 /* eslint-disable import/named */
 /* eslint-disable import/prefer-default-export */
+import { add } from 'date-fns';
 import { LocalStorageHelper } from './localStorageHelper';
 import { Task } from './task';
 import { Project } from './project';
@@ -8,11 +9,13 @@ export class TaskManager {
   constructor() {
     this.tasks = [];
     this.projects = [];
+    this.defaultTasks = false;
 
     this._localStorageHelper = new LocalStorageHelper();
     // this._localStorageHelper.ClearItems();
 
     this.LoadFromLocalStorage();
+    this.CreateDefaultTasks();
   }
 
   LoadFromLocalStorage() {
@@ -62,6 +65,58 @@ export class TaskManager {
       }
       Task.SetHighestId(highestId);
       // this.tasks = parsedTasks;
+    }
+  }
+
+  CreateDefaultTasks() {
+    const defaultTask = this._localStorageHelper.RetrieveItem('DEFAULT');
+
+    if (defaultTask === null) {
+      this.defaultTasks = true;
+      this._localStorageHelper.SaveItem('DEFAULT', true);
+
+      const p1 = this.AddProject('Home');
+      const p2 = this.AddProject('Work');
+
+      this.AddTask(
+        'Go Shopping',
+        'Do weekly grocery shopping',
+        p1.projectId,
+        add(Date.now(), { weeks: 1 }),
+        0
+      );
+
+      this.AddTask(
+        'Vacuum',
+        'Vacuum the house.',
+        p1.projectId,
+        add(Date.now(), { weeks: 2 }),
+        1
+      );
+
+      this.AddTask(
+        'Check Emails',
+        'Check and reply to all emails',
+        p2.projectId,
+        add(Date.now(), { days: 1 }),
+        1
+      );
+
+      this.AddTask(
+        'Defrag HDD',
+        'Defrag my hard drives',
+        p2.projectId,
+        add(Date.now(), { weeks: 3 }),
+        0
+      );
+
+      this.AddTask(
+        'Complete Deliverables',
+        'Complete my weekly deliverables',
+        p2.projectId,
+        add(Date.now(), { days: 3 }),
+        2
+      );
     }
   }
 
@@ -254,5 +309,40 @@ export class TaskManager {
 
     this._localStorageHelper.RemoveItem('TASKS');
     this._localStorageHelper.SaveItem('TASKS', this.tasks);
+  }
+
+  SetTaskComplete(taskId) {
+    let returnValue = false;
+    for (let i = 0; i < this.tasks.length; i++) {
+      if (this.tasks[i].taskId === taskId) {
+        returnValue = this.tasks[i].ToggleCompletionStatus();
+        break;
+      }
+    }
+
+    this._localStorageHelper.RemoveItem('TASKS');
+    this._localStorageHelper.SaveItem('TASKS', this.tasks);
+
+    return returnValue;
+  }
+
+  GetTaskCompletionDate(taskId)
+  {
+    for (let i = 0; i < this.tasks.length; i++) {
+      if (this.tasks[i].taskId === taskId) {
+        return this.tasks[i].completionDate;
+      }
+    }
+    return null;
+  }
+
+  GetTaskDueDate(taskId)
+  {
+    for (let i = 0; i < this.tasks.length; i++) {
+      if (this.tasks[i].taskId === taskId) {
+        return this.tasks[i].dueDate;
+      }
+    }
+    return null;
   }
 }

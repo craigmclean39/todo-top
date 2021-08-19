@@ -7,7 +7,7 @@ export class Project {
     return this.id;
   }
 
-  //used when reading projects from local Storage, don't want conflicting ids
+  // used when reading projects from local Storage, don't want conflicting ids
   static SetHighestId(highId) {
     this.id = highId;
   }
@@ -29,7 +29,7 @@ export class Project {
     return `Project: ${this.projectName} ID: ${this.projectId}`;
   }
 
-  //used when reading projects from localStorage
+  // used when reading projects from localStorage
   SetId(id) {
     this.projectId = id;
   }

@@ -4,8 +4,8 @@ export class LocalStorageHelper {
   constructor() {
     if (typeof Storage !== 'undefined') {
       this._storageAvailable = true;
-      /*       console.log('Local Storage Available');
-      console.log(window.localStorage); */
+      // console.log('Local Storage Available');
+      console.log(window.localStorage);
     } else {
       this._storageAvailable = false;
       /* console.log('Local Storage Not Available'); */

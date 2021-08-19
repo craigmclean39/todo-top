@@ -13,6 +13,7 @@ export class TaskPage {
     this.DisplayModal = this.DisplayModal.bind(this);
     this.HideModal = this.HideModal.bind(this);
     this.AddTask = this.AddTask.bind(this);
+    this.CompleteTask = this.CompleteTask.bind(this);
 
     this._content = DomHelper.CreateElement('div', ['content-wrapper']);
     this._background = DomHelper.CreateElement('div', ['task-background']);
@@ -43,28 +44,94 @@ export class TaskPage {
 
     taskWrapper = DomHelper.CreateElement('div', ['task-wrapper']);
     for (let i = 0; i < this._tasks.length; i++) {
-      taskWrapper.appendChild(TaskPage.CreateTask(this._tasks[i]));
+      taskWrapper.appendChild(this.CreateTask(this._tasks[i]));
     }
 
     this._background.appendChild(taskWrapper);
   }
 
-  static CreateTask(task) {
+  CreateTask(task) {
     const taskDiv = DomHelper.CreateElement('div', ['task-div']);
     taskDiv.dataset.taskId = task.id;
 
-    const title = taskDiv.appendChild(
+    const taskFlex = DomHelper.CreateElement('div', ['task-flex']);
+
+    let taskCustomCheck;
+
+    if (task.completionStatus) {
+      taskCustomCheck = DomHelper.CreateElement('button', [
+        'task-custom-check-complete',
+      ]);
+    } else {
+      taskCustomCheck = DomHelper.CreateElement('button', [
+        'task-custom-check',
+      ]);
+    }
+
+    taskCustomCheck.addEventListener('click', this.CompleteTask);
+
+    taskFlex.appendChild(taskCustomCheck);
+
+    const taskData = DomHelper.CreateElement('div', ['task-data']);
+
+    const title = taskData.appendChild(
       DomHelper.CreateElement('div', ['task-individual-title'])
     );
     title.innerText = task.name;
 
-    const dueDate = taskDiv.appendChild(
-      DomHelper.CreateElement('div', ['task-due-date'])
+    if (task.completionStatus) {
+      title.classList.add('task-individual-title-complete');
+    }
+
+    const dueDate = taskData.appendChild(
+      DomHelper.CreateElement('div', ['task-date'])
     );
-    dueDate.innerText = `Due: ${format(task.dueDate, 'PPPP')}`;
-    // dueDate.innerText = task.dueDate;
+
+    if (task.completionStatus) {
+      dueDate.innerText = `Completed: ${format(task.completionDate, 'PPPP')}`;
+    } else {
+      dueDate.innerText = `Due: ${format(task.dueDate, 'PPPP')}`;
+    }
+
+    taskFlex.appendChild(taskData);
+    taskDiv.appendChild(taskFlex);
 
     return taskDiv;
+  }
+
+  CompleteTask(evt) {
+    const taskId = Number(
+      evt.target.parentElement.parentElement.dataset.taskId
+    );
+    const completionStatus = this._taskManager.SetTaskComplete(taskId);
+
+    const taskDiv = evt.target.parentElement.parentElement;
+    const taskTitle = taskDiv.querySelector('.task-individual-title');
+    const taskDate = taskDiv.querySelector('.task-date');
+
+    if (completionStatus) {
+      evt.target.classList.remove('task-custom-check');
+      evt.target.classList.add('task-custom-check-complete');
+
+      taskTitle.classList.add('task-individual-title-complete');
+      taskDate.classList.add('task-date-complete');
+
+      taskDate.innerText = `Completed: ${format(
+        this._taskManager.GetTaskCompletionDate(taskId),
+        'PPPP'
+      )}`;
+    } else {
+      evt.target.classList.remove('task-custom-check-complete');
+      evt.target.classList.add('task-custom-check');
+
+      taskTitle.classList.remove('task-individual-title-complete');
+      taskDate.classList.remove('task-date-complete');
+
+      taskDate.innerText = `Due: ${format(
+        this._taskManager.GetTaskDueDate(taskId),
+        'PPPP'
+      )}`;
+    }
   }
 
   GoBackToProjectPage() {

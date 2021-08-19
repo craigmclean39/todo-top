@@ -50,6 +50,11 @@ export class Task {
     }
   }
 
+  ToggleCompletionStatus() {
+    this.SetCompletionStatus(!this.taskComplete);
+    return this.taskComplete;
+  }
+
   SetCompletionDate(date) {
     this.taskCompletionDate = date;
   }
