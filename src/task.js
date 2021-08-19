@@ -1,4 +1,4 @@
-import { format, isThisSecond } from 'date-fns';
+import { format, isThisSecond, parse } from 'date-fns';
 
 export class Task {
 
@@ -8,6 +8,11 @@ export class Task {
         this.#id++;
         return this.#id;
       }
+
+    static SetHighestId(highId)
+    {
+        this.#id = highId;
+    }
 
 
     constructor()
@@ -51,7 +56,21 @@ export class Task {
             this.taskCompletionDate = null;
             this.taskComplete = false;
         }
-        
+    }
+
+    SetCompletionDate(date)
+    {
+        this.taskCompletionDate = date;
+    }
+
+    SetTaskId(id)
+    {
+        this.taskId = id;
+    }
+
+    SetCreationDate(date)
+    {
+        this.taskCreationDate = date;
     }
 
     get info()
@@ -113,6 +132,12 @@ export class Project {
         this.#id++;
         return this.#id;
       }
+    
+    //used when reading projects from local Storage, don't want conflicting ids
+    static SetHighestId(highId)
+    {
+        this.#id = highId;
+    }
 
     constructor(projectName)
     {
@@ -131,6 +156,12 @@ export class Project {
     get info() {
         return `Project: ${this.projectName} ID: ${this.projectId}`;
     }
+
+    //used when reading projects from localStorage
+    SetId(id)
+    {
+        this.projectId = id;
+    }
 }
 
 export class TaskManager {
@@ -139,6 +170,64 @@ export class TaskManager {
     {
         this.tasks = [];
         this.projects = [];
+
+        this._localStorageHelper = new LocalStorageHelper();
+        //this._localStorageHelper.ClearItems();
+
+        const projectsString = this._localStorageHelper.RetrieveItem("PROJECTS");
+        const tasksString = this._localStorageHelper.RetrieveItem("TASKS");
+
+        let parsedProjects, parsedTasks;
+        if(projectsString != null)
+        {
+            parsedProjects = JSON.parse(projectsString);
+
+            //Need to convert back to proper project items
+            let highestId = 0;
+            for(let i = 0; i < parsedProjects.length; i++)
+            {
+                let p = new Project(parsedProjects[i].projectName);
+                p.SetId(parsedProjects[i].projectId);
+                if(parsedProjects[i].projectId > highestId)
+                {
+                    highestId = parsedProjects[i].projectId;
+                }
+                this.projects.push(p);
+            }
+            Project.SetHighestId(highestId);
+        }
+
+        if(tasksString != null)
+        {
+            parsedTasks = JSON.parse(tasksString);
+            let highestId = 0;
+            for(let i = 0; i < parsedTasks.length; i++)
+            {
+                let t = new Task();
+                t.CreateTask(
+                    parsedTasks[i].taskName,
+                    parsedTasks[i].projectId,
+                    parsedTasks[i].taskDescription,
+                    parsedTasks[i].taskDueDate,
+                    parsedTasks[i].taskPriority
+                )
+
+                if(parsedTasks[i].taskId > highestId)
+                {
+                    highestId = parsedTasks[i].taskId;
+                }
+                t.SetTaskId(parsedTasks[i].taskId);
+                t.SetCreationDate(parsedTasks[i].taskCreationDate);
+                t.SetCompletionStatus(parsedTasks[i].taskComplete);
+                t.SetCompletionDate(parsedTasks[i].taskCompletionDate);
+
+                this.tasks.push(t);
+
+                
+            }
+            Task.SetHighestId(highestId);
+            //this.tasks = parsedTasks;
+        }
     }
 
     //Get All Tasks
@@ -365,6 +454,10 @@ export class TaskManager {
     AddProject(project)  {
         let proj = new Project(project);
         this.projects.push(proj);
+
+        this._localStorageHelper.RemoveItem("PROJECTS");
+        this._localStorageHelper.SaveItem("PROJECTS", this.projects);
+
         return proj;
     }
 
@@ -374,5 +467,65 @@ export class TaskManager {
         let task = new Task();
         task.CreateTask(taskTitle, projectId, taskDesc, dueDate, priority);
         this.tasks.push(task);
+
+        this._localStorageHelper.RemoveItem("TASKS");
+        this._localStorageHelper.SaveItem("TASKS", this.tasks);
+
+    }   
+}
+
+export class LocalStorageHelper {
+    constructor(){
+        if(typeof(Storage) !== "undefined")
+        {
+            this._storageAvailable = true;
+            console.log("Local Storage Available");
+            console.log(window.localStorage);
+        }
+        else
+        {
+            this._storageAvailable = false;
+            console.log("Local Storage Not Available");
+        }
+    }
+
+    SaveItem(key, objectToSave)
+    {
+        if(!this._storageAvailable)
+        {
+            return;
+        }
+        
+        window.localStorage.setItem(key, JSON.stringify(objectToSave));
+    }
+
+    ClearItems()
+    {
+        if(!this._storageAvailable)
+        {
+            return;
+        }
+
+        window.localStorage.clear();
+    }
+
+    RetrieveItem(key)
+    {
+        if(!this._storageAvailable)
+        {
+            return undefined;
+        }
+
+        return window.localStorage.getItem(key);
+    }
+
+    RemoveItem(key)
+    {
+        if(!this._storageAvailable)
+        {
+            return;
+        }
+
+        window.localStorage.removeItem(key);
     }
 }
