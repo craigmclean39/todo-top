@@ -35,7 +35,7 @@ export class Task {
         this.taskName = name;
         this.projectId = projectId;
         this.taskDescription = description;
-        this.taskDueDate = dueDate;
+        this.taskDueDate = new Date(dueDate);
         this.taskPriority = priority;
 
         this.taskCreationDate = Date.now();
@@ -70,7 +70,7 @@ export class Task {
 
     SetCreationDate(date)
     {
-        this.taskCreationDate = date;
+        this.taskCreationDate = new Date(date);
     }
 
     get info()

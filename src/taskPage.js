@@ -65,8 +65,8 @@ export class TaskPage {
         title.innerText = task.name;
 
         let dueDate = taskDiv.appendChild(DomHelper.CreateElement("div", ["task-due-date"]));
-        //dueDate.innerText = `Due: ${format(task.dueDate, "PPPP")}`;
-        dueDate.innerText = task.dueDate;
+        dueDate.innerText = `Due: ${format(task.dueDate, "PPPP")}`;
+        //dueDate.innerText = task.dueDate;
 
         return taskDiv;
     }
