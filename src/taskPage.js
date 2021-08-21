@@ -200,17 +200,24 @@ export class TaskPage {
     const hideBtn = parent.querySelector('.task-hide-details-button ');
     const showBtn = parent.querySelector('.task-details-button ');
     const taskCreationDate = parent.querySelector('.task-creation-date');
+    const taskDetailsContainer = parent.querySelector(
+      '.task-details-container'
+    );
 
     if (desc.style.display === 'flex') {
       desc.style.display = 'none';
       showBtn.style.display = 'block';
       hideBtn.style.display = 'none';
       taskCreationDate.style.display = 'none';
+      taskDetailsContainer.style.backgroundColor = 'transparent';
+      taskDetailsContainer.style.margin = '0px';
     } else {
       desc.style.display = 'flex';
       showBtn.style.display = 'none';
       hideBtn.style.display = 'block';
       taskCreationDate.style.display = 'block';
+      taskDetailsContainer.style.backgroundColor = '#A9CC8E';
+      taskDetailsContainer.style.margin = '12px';
     }
   }
 

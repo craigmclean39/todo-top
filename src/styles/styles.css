@@ -432,22 +432,22 @@ body {
   font-family: 'Overpass';
   font-size: 1.3rem;
   line-height: 1.3rem;
-  margin-left: 24px;
-  margin-right: 24px;
-  padding-top: 8px;
+  margin-left: 8px;
+  margin-right: 8px;
+  padding-top: 12px;
   display: none;
-  width: calc(100% - 48px);
+  width: calc(100% - 16px);
 }
 .task-creation-date {
   font-family: 'Overpass';
   font-size: 1.2rem;
   font-style: italic;
   line-height: 1.2rem;
-  margin-left: 24px;
-  margin-right: 24px;
-  padding-top: 4px;
+  margin-left: 8px;
+  margin-right: 8px;
+  padding-top: 8px;
   display: none;
-  width: calc(100% - 48px);
+  width: calc(100% - 16px);
 }
 
 .task-details-button,
@@ -479,4 +479,5 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
+  border-radius: 8px;
 }
