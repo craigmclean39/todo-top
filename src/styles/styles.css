@@ -75,7 +75,7 @@ body {
 .project-div,
 .task-div {
   background-color: #f8961e;
-  width: 356px;
+  width: clamp(310px, 85vw, 356px);
   height: 62px;
   margin: 11px;
   border-radius: 10px;
