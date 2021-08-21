@@ -182,7 +182,7 @@ export class ProjectPage {
     const numTasks = projectDiv.appendChild(
       DomHelper.CreateElement('div', ['project-individual-num-tasks'])
     );
-    if (projectNumTasks > 1) {
+    if (projectNumTasks !== 1) {
       numTasks.innerText = `${projectNumTasks} Tasks`;
     } else {
       numTasks.innerText = `${projectNumTasks} Task`;

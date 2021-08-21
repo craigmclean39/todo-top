@@ -77,6 +77,9 @@ export class TaskPage {
 
     taskCustomCheck.addEventListener('click', this.CompleteTask);
 
+    const taskDataAndDescContainer = DomHelper.CreateElement('div', [
+      'task-data-desc-container',
+    ]);
     const taskDataContainer = DomHelper.CreateElement('div', [
       'task-data-container',
     ]);
@@ -139,15 +142,76 @@ export class TaskPage {
     deleteTask.addEventListener('click', this.DeleteTask);
     editTask.addEventListener('click', this.EditTask);
 
+    const taskDetailsContainer = DomHelper.CreateElement('div', [
+      'task-details-container',
+    ]);
+
+    const taskDetailsButton = DomHelper.CreateElement('button', [
+      'task-details-button',
+    ]);
+    taskDetailsButton.addEventListener('click', TaskPage.ToggleDetails);
+    taskDetailsButton.title = 'Show';
+
+    const taskHideDetailsButton = DomHelper.CreateElement('button', [
+      'task-hide-details-button',
+    ]);
+    taskHideDetailsButton.addEventListener('click', TaskPage.ToggleDetails);
+    taskHideDetailsButton.title = 'Hide';
+
+    const taskDescription = DomHelper.CreateElement('div', [
+      'task-description',
+    ]);
+    taskDescription.innerText = `Description: ${task.description}`;
+
+    const taskCreationDate = DomHelper.CreateElement('div', [
+      'task-creation-date',
+    ]);
+    taskCreationDate.innerText = `Created: ${format(
+      task.creationDate,
+      'PPPP'
+    )}`;
+
+    taskDetailsContainer.appendChild(taskDetailsButton);
+    taskDetailsContainer.appendChild(taskDescription);
+    taskDetailsContainer.appendChild(taskCreationDate);
+    taskDetailsContainer.appendChild(taskHideDetailsButton);
+
     taskButtonContainer.appendChild(editTask);
     taskButtonContainer.appendChild(deleteTask);
     taskDataContainer.appendChild(taskData);
     taskDataContainer.appendChild(taskButtonContainer);
+    taskDataAndDescContainer.appendChild(taskDataContainer);
     taskFlex.appendChild(taskCustomCheck);
-    taskFlex.appendChild(taskDataContainer);
+    taskFlex.appendChild(taskDataAndDescContainer);
     taskDiv.appendChild(taskFlex);
+    taskDiv.appendChild(taskDetailsContainer);
 
     return taskDiv;
+  }
+
+  static ToggleDetails(evt) {
+    let parent = evt.target.parentElement;
+
+    while (!parent.classList.contains('task-div')) {
+      parent = parent.parentElement;
+    }
+
+    const desc = parent.querySelector('.task-description ');
+    const hideBtn = parent.querySelector('.task-hide-details-button ');
+    const showBtn = parent.querySelector('.task-details-button ');
+    const taskCreationDate = parent.querySelector('.task-creation-date');
+
+    if (desc.style.display === 'flex') {
+      desc.style.display = 'none';
+      showBtn.style.display = 'block';
+      hideBtn.style.display = 'none';
+      taskCreationDate.style.display = 'none';
+    } else {
+      desc.style.display = 'flex';
+      showBtn.style.display = 'none';
+      hideBtn.style.display = 'block';
+      taskCreationDate.style.display = 'block';
+    }
   }
 
   DeleteTask(evt) {

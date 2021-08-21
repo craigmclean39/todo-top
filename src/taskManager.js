@@ -75,12 +75,11 @@ export class TaskManager {
       this.defaultTasks = true;
       this._localStorageHelper.SaveItem('DEFAULT', true);
 
-      const p1 = this.AddProject('Home');
-      const p2 = this.AddProject('Work');
+      const p1 = this.AddProject('Example Project');
 
       this.AddTask(
         'Go Shopping',
-        'Do weekly grocery shopping',
+        'Do weekly grocery shopping. Get Bananas, oranges, bread, milk and eggs.',
         p1.projectId,
         add(Date.now(), { weeks: 1 }),
         0
@@ -95,26 +94,10 @@ export class TaskManager {
       );
 
       this.AddTask(
-        'Check Emails',
-        'Check and reply to all emails',
-        p2.projectId,
+        'Pay the mortgage',
+        'Make sure there is money in your account for the mortgage to withdrawl',
+        p1.projectId,
         add(Date.now(), { days: 1 }),
-        1
-      );
-
-      this.AddTask(
-        'Defrag HDD',
-        'Defrag my hard drives',
-        p2.projectId,
-        add(Date.now(), { weeks: 3 }),
-        0
-      );
-
-      this.AddTask(
-        'Complete Deliverables',
-        'Complete my weekly deliverables',
-        p2.projectId,
-        add(Date.now(), { days: 3 }),
         2
       );
     }
