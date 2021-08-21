@@ -311,6 +311,17 @@ export class TaskManager {
     this._localStorageHelper.SaveItem('TASKS', this.tasks);
   }
 
+  EditTask(taskId, taskTitle, taskDesc, projectId, dueDate, priority) {
+    for (let i = 0; i < this.tasks.length; i++) {
+      if (this.tasks[i].id === taskId) {
+        this.tasks[i].SetTaskName(taskTitle);
+        this.tasks[i].SetTaskDescription(taskDesc);
+        this.tasks[i].SetTaskDueDate(dueDate);
+        this.tasks[i].SetTaskPriority(priority);
+      }
+    }
+  }
+
   SetTaskComplete(taskId) {
     let returnValue = false;
     for (let i = 0; i < this.tasks.length; i++) {
@@ -326,8 +337,7 @@ export class TaskManager {
     return returnValue;
   }
 
-  GetTaskCompletionDate(taskId)
-  {
+  GetTaskCompletionDate(taskId) {
     for (let i = 0; i < this.tasks.length; i++) {
       if (this.tasks[i].taskId === taskId) {
         return this.tasks[i].completionDate;
@@ -336,13 +346,23 @@ export class TaskManager {
     return null;
   }
 
-  GetTaskDueDate(taskId)
-  {
+  GetTaskDueDate(taskId) {
     for (let i = 0; i < this.tasks.length; i++) {
       if (this.tasks[i].taskId === taskId) {
         return this.tasks[i].dueDate;
       }
     }
     return null;
+  }
+
+  DeleteTask(taskId) {
+    for (let i = 0; i < this.tasks.length; i++) {
+      if (this.tasks[i].taskId === taskId) {
+        this.tasks.splice(i, 1);
+        this._localStorageHelper.RemoveItem('TASKS');
+        this._localStorageHelper.SaveItem('TASKS', this.tasks);
+        break;
+      }
+    }
   }
 }

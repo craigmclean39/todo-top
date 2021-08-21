@@ -67,6 +67,22 @@ export class Task {
     this.taskCreationDate = new Date(date);
   }
 
+  SetTaskName(name) {
+    this.taskName = name;
+  }
+
+  SetTaskDueDate(dueDate) {
+    this.taskDueDate = dueDate;
+  }
+
+  SetTaskDescription(description) {
+    this.taskDescription = description;
+  }
+
+  SetTaskPriority(priority) {
+    this.taskPriority = priority;
+  }
+
   get info() {
     return `Task: ${this.taskName}, Project: ${this.projectId}, Description: ${
       this.taskDescription

@@ -8,12 +8,16 @@ export class TaskPage {
   constructor(taskManager, taskDom) {
     this._taskDom = taskDom;
     this._taskManager = taskManager;
+    this._editingTask = false;
+    this._editTaskId = null;
 
     this.GoBackToProjectPage = this.GoBackToProjectPage.bind(this);
     this.DisplayModal = this.DisplayModal.bind(this);
     this.HideModal = this.HideModal.bind(this);
     this.AddTask = this.AddTask.bind(this);
     this.CompleteTask = this.CompleteTask.bind(this);
+    this.DeleteTask = this.DeleteTask.bind(this);
+    this.EditTask = this.EditTask.bind(this);
 
     this._content = DomHelper.CreateElement('div', ['content-wrapper']);
     this._background = DomHelper.CreateElement('div', ['task-background']);
@@ -70,7 +74,9 @@ export class TaskPage {
 
     taskCustomCheck.addEventListener('click', this.CompleteTask);
 
-    taskFlex.appendChild(taskCustomCheck);
+    const taskDataContainer = DomHelper.CreateElement('div', [
+      'task-data-container',
+    ]);
 
     const taskData = DomHelper.CreateElement('div', ['task-data']);
 
@@ -93,10 +99,59 @@ export class TaskPage {
       dueDate.innerText = `Due: ${format(task.dueDate, 'PPPP')}`;
     }
 
-    taskFlex.appendChild(taskData);
+    const taskButtonContainer = DomHelper.CreateElement('div', [
+      'task-button-container',
+    ]);
+    const deleteTask = DomHelper.CreateElement('button', ['delete-task']);
+    const editTask = DomHelper.CreateElement('button', ['edit-task']);
+
+    deleteTask.title = 'Delete';
+    editTask.title = 'Edit';
+
+    deleteTask.addEventListener('click', this.DeleteTask);
+    editTask.addEventListener('click', this.EditTask);
+
+    taskButtonContainer.appendChild(editTask);
+    taskButtonContainer.appendChild(deleteTask);
+    taskDataContainer.appendChild(taskData);
+    taskDataContainer.appendChild(taskButtonContainer);
+    taskFlex.appendChild(taskCustomCheck);
+    taskFlex.appendChild(taskDataContainer);
     taskDiv.appendChild(taskFlex);
 
     return taskDiv;
+  }
+
+  DeleteTask(evt) {
+    let taskId = -1;
+    let parent = evt.target.parentElement;
+
+    while (!parent.classList.contains('task-div')) {
+      parent = parent.parentElement;
+    }
+
+    taskId = Number(parent.dataset.taskId);
+
+    this._taskManager.DeleteTask(taskId);
+    this.RefreshTasks();
+  }
+
+  EditTask(evt) {
+    let taskId = -1;
+    let parent = evt.target.parentElement;
+
+    while (!parent.classList.contains('task-div')) {
+      parent = parent.parentElement;
+    }
+
+    taskId = Number(parent.dataset.taskId);
+
+    for (let i = 0; i < this._tasks.length; i++) {
+      if (this._tasks[i].taskId === taskId) {
+        this.PopulateModalForEdit(this._tasks[i]);
+        break;
+      }
+    }
   }
 
   CompleteTask(evt) {
@@ -271,11 +326,16 @@ export class TaskPage {
     this._overlay.classList.add('blur-overlay');
   }
 
+  DisplayModalForEdit() {
+    this._addTaskModalWrapper.style.display = 'flex';
+    this._addTaskModal.querySelector('.task-modal-name-input').focus();
+    this._overlay.classList.add('blur-overlay');
+  }
+
   HideModal() {
     this._addTaskModalWrapper.style.display = 'none';
-    // this.#ResetProjectModal();
-
     this._overlay.classList.remove('blur-overlay');
+    this._editingTask = false;
   }
 
   ResetModal() {
@@ -294,13 +354,24 @@ export class TaskPage {
   AddTask() {
     const input = this.GetTaskModalInput();
 
-    this._taskManager.AddTask(
-      input.taskName,
-      input.taskDesc,
-      input.projectId,
-      new Date(input.taskDate),
-      input.taskPriority
-    );
+    if (!this._editingTask) {
+      this._taskManager.AddTask(
+        input.taskName,
+        input.taskDesc,
+        input.projectId,
+        new Date(input.taskDate),
+        input.taskPriority
+      );
+    } else {
+      this._taskManager.EditTask(
+        this._editTaskId,
+        input.taskName,
+        input.taskDesc,
+        input.projectId,
+        new Date(input.taskDate),
+        input.taskPriority
+      );
+    }
 
     this.RefreshTasks();
     this.HideModal();
@@ -319,6 +390,37 @@ export class TaskPage {
         '.task-modal-priority-input'
       ).value,
     };
+  }
+
+  PopulateModalForEdit(task) {
+    const nameInput = this._addTaskModal.querySelector(
+      '.task-modal-name-input'
+    );
+    const descInput = this._addTaskModal.querySelector(
+      '.task-modal-desc-input'
+    );
+    const dateInput = this._addTaskModal.querySelector(
+      '.task-modal-date-input'
+    );
+    const priorityInput = this._addTaskModal.querySelector(
+      '.task-modal-priority-input'
+    );
+
+    nameInput.value = task.taskName;
+    descInput.value = task.description;
+
+    const { dueDate } = task;
+    const formattedDate = format(dueDate, 'yyyy-MM-dd');
+    const formattedTime = format(dueDate, 'HH:mm');
+
+    dateInput.value = `${formattedDate}T${formattedTime}`;
+
+    priorityInput.value = task.priority;
+
+    this._editTaskId = task.taskId;
+    this._editingTask = true;
+
+    this.DisplayModalForEdit();
   }
 
   RefreshTasks() {
