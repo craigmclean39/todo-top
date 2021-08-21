@@ -375,11 +375,12 @@ body {
   background-color: transparent;
   border: none;
   margin-left: 5px;
-  margin-right: 5px;
+  margin-right: 0px;
 }
 
 .delete-task {
   background-image: url('../media/trash.svg');
+  margin-right: 10px;
 }
 
 .edit-task {
@@ -400,4 +401,16 @@ body {
 .task-button-container {
   display: flex;
   align-items: flex-end;
+  border-radius: 3px;
+}
+
+.task-title-priority {
+  display: flex;
+  align-items: center;
+}
+.task-priority {
+  height: 18px;
+  width: 18px;
+  padding-bottom: 5px;
+  padding-left: 5px;
 }

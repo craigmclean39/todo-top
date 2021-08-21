@@ -318,6 +318,9 @@ export class TaskManager {
         this.tasks[i].SetTaskDescription(taskDesc);
         this.tasks[i].SetTaskDueDate(dueDate);
         this.tasks[i].SetTaskPriority(priority);
+        this._localStorageHelper.RemoveItem('TASKS');
+        this._localStorageHelper.SaveItem('TASKS', this.tasks);
+        break;
       }
     }
   }

@@ -3,6 +3,9 @@ import { format, add } from 'date-fns';
 import { DomHelper } from './domHelper';
 import BackArrow from './media/back-arrow.svg';
 import AddImg from './media/add.svg';
+import LowPriority from './media/prioritylow.svg';
+import MedPriority from './media/prioritymedium.svg';
+import HighPriority from './media/priorityhigh.svg';
 
 export class TaskPage {
   constructor(taskManager, taskDom) {
@@ -79,11 +82,36 @@ export class TaskPage {
     ]);
 
     const taskData = DomHelper.CreateElement('div', ['task-data']);
+    const taskTitlePriority = DomHelper.CreateElement('div', [
+      'task-title-priority',
+    ]);
+    const taskPriority = DomHelper.CreateElement('img', ['task-priority']);
 
-    const title = taskData.appendChild(
+    switch (Number(task.priority)) {
+      case 0:
+        taskPriority.src = LowPriority;
+        taskPriority.title = 'Low Priority';
+        break;
+      case 1:
+        taskPriority.src = MedPriority;
+        taskPriority.title = 'Medium Priority';
+        break;
+      case 2:
+        taskPriority.src = HighPriority;
+        taskPriority.title = 'High Priority';
+        break;
+      default:
+        break;
+    }
+
+    const title = taskTitlePriority.appendChild(
       DomHelper.CreateElement('div', ['task-individual-title'])
     );
     title.innerText = task.name;
+
+    taskTitlePriority.appendChild(taskPriority);
+
+    taskData.appendChild(taskTitlePriority);
 
     if (task.completionStatus) {
       title.classList.add('task-individual-title-complete');
@@ -155,9 +183,15 @@ export class TaskPage {
   }
 
   CompleteTask(evt) {
-    const taskId = Number(
-      evt.target.parentElement.parentElement.dataset.taskId
-    );
+    let taskId = -1;
+    let parent = evt.target.parentElement;
+
+    while (!parent.classList.contains('task-div')) {
+      parent = parent.parentElement;
+    }
+
+    taskId = Number(parent.dataset.taskId);
+
     const completionStatus = this._taskManager.SetTaskComplete(taskId);
 
     const taskDiv = evt.target.parentElement.parentElement;
@@ -341,6 +375,7 @@ export class TaskPage {
   ResetModal() {
     this._addTaskModal.querySelector('.task-modal-name-input').value = '';
     this._addTaskModal.querySelector('.task-modal-desc-input').value = '';
+    this._addTaskModal.querySelector('.task-modal-priority-input').value = 0;
 
     const currentDate = Date.now();
     const formattedDate = format(currentDate, 'yyyy-MM-dd');
