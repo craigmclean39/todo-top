@@ -429,18 +429,27 @@ export class TaskPage {
     this._addTaskModalWrapper.style.display = 'flex';
     this._addTaskModal.querySelector('.task-modal-name-input').focus();
     this._overlay.classList.add('blur-overlay');
+
+    // hide add button
+    this._background.querySelector('.project-add').style.display = 'none';
   }
 
   DisplayModalForEdit() {
     this._addTaskModalWrapper.style.display = 'flex';
     this._addTaskModal.querySelector('.task-modal-name-input').focus();
     this._overlay.classList.add('blur-overlay');
+
+    // hide add button
+    this._background.querySelector('.project-add').style.display = 'none';
   }
 
   HideModal() {
     this._addTaskModalWrapper.style.display = 'none';
     this._overlay.classList.remove('blur-overlay');
     this._editingTask = false;
+
+    // show add button
+    this._background.querySelector('.project-add').style.display = 'block';
   }
 
   ResetModal() {

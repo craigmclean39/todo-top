@@ -61,6 +61,8 @@ export class ProjectPage {
     this._footerModalWrapper.style.display = 'flex';
     this._addProjectModal.querySelector('.project-modal-text-input').focus();
     this._overlay.classList.add('blur-overlay');
+
+    this._background.querySelector('.project-add').style.display = 'none';
   }
 
   HideModal() {
@@ -68,21 +70,25 @@ export class ProjectPage {
     this.ResetProjectModal();
 
     this._overlay.classList.remove('blur-overlay');
+    this._background.querySelector('.project-add').style.display = 'block';
   }
 
-  AddProject() {
-    this._taskManager.AddProject(this.GetProjectModalInput());
+  AddProject(evt) {
+    //console.dir(evt);
+    evt.preventDefault();
+      this._taskManager.AddProject(this.GetProjectModalInput());
 
-    const projects = this._background.querySelector('.project-wrapper');
-    this._background.removeChild(projects);
+      const projects = this._background.querySelector('.project-wrapper');
+      this._background.removeChild(projects);
 
-    this.SetProjects(
-      this._taskManager.GetProjectNames(),
-      this._taskManager.GetProjectIds(),
-      this._taskManager.GetProjectTaskNumbers()
-    );
+      this.SetProjects(
+        this._taskManager.GetProjectNames(),
+        this._taskManager.GetProjectIds(),
+        this._taskManager.GetProjectTaskNumbers()
+      );
 
-    this.HideModal();
+      this.HideModal();
+  
   }
 
   SelectProject(evt) {
@@ -98,15 +104,19 @@ export class ProjectPage {
     this._footerModalWrapper = DomHelper.CreateElement('div', [
       'project-footer-modal-wrapper',
     ]);
+
     this._addProjectModal = DomHelper.CreateElement('div', ['project-modal']);
 
+    this._addProjectForm = DomHelper.CreateElement('form');
+    //this._addProjectForm.onSubmit = 
     const projectNameInput = DomHelper.CreateElement('input', [
       'project-modal-text-input',
     ]);
+    projectNameInput.required = true;
     projectNameInput.type = 'text';
     projectNameInput.placeholder = 'New Project...';
     projectNameInput.maxLength = 30;
-    this._addProjectModal.appendChild(projectNameInput);
+    this._addProjectForm.appendChild(projectNameInput);
 
     const buttonWrapper = DomHelper.CreateElement('div', [
       'project-modal-button-wrapper',
@@ -122,14 +132,17 @@ export class ProjectPage {
 
     addButton.innerText = 'OK';
     cancelButton.innerText = 'CANCEL';
+    cancelButton.type = 'button';
 
-    addButton.addEventListener('click', this.AddProject);
+    this._addProjectForm.addEventListener('submit', this.AddProject);
     cancelButton.addEventListener('click', this.HideModal);
 
     buttonWrapper.appendChild(cancelButton);
     buttonWrapper.appendChild(addButton);
 
-    this._addProjectModal.appendChild(buttonWrapper);
+    this._addProjectForm.appendChild(buttonWrapper);
+
+    this._addProjectModal.appendChild(this._addProjectForm);
     this._footerModalWrapper.appendChild(this._addProjectModal);
 
     return this._footerModalWrapper;

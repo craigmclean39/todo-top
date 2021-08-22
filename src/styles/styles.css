@@ -16,7 +16,8 @@ body {
 
 .project-background {
   background-color: #577590;
-  width: 100%;
+  width: max-content;
+  min-width: 100%;
   height: max-content;
   min-height: 100%;
 }
@@ -37,9 +38,16 @@ body {
 
 .task-background {
   background-color: #f9c74f;
-  width: 100%;
+  width: max-content;
+  min-width: 100%;
   height: max-content;
   min-height: 100%;
+}
+
+.project-title {
+  font-family: 'Unica One';
+  font-size: clamp(2rem, 4.8rem, 4.8rem);
+  color: white;
 }
 
 .project-header {
@@ -47,7 +55,9 @@ body {
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  padding-bottom: 30px;
+  padding-bottom: 3rem;
+  padding-right: 1rem;
+  padding-top: 1rem;
 }
 
 .project-logo {
@@ -66,10 +76,16 @@ body {
   align-items: center;
 }
 
-.project-title {
-  font-family: 'Unica One';
-  font-size: 4.8rem;
-  color: white;
+@media (min-width: 768px) {
+  .project-wrapper,
+  .task-wrapper {
+    justify-content: flex-start;
+    align-items: flex-start;
+    max-height: 75vh;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
 }
 
 .project-div,
@@ -77,9 +93,9 @@ body {
   background-color: #f8961e;
   width: clamp(310px, 85vw, 356px);
   height: 62px;
-  margin: 11px;
   border-radius: 10px;
   filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.25));
+  margin: 1rem 2rem;
 }
 
 .project-div {
@@ -206,7 +222,7 @@ body {
 
 .project-modal {
   display: block;
-  width: clamp(310px, 85vw, 356px);
+  width: clamp(310px, 90vw, 356px);
   height: 130px;
   background-color: #c4c4c4;
   border-radius: 10px;
@@ -228,7 +244,7 @@ body {
 
 .add-task-modal {
   display: block;
-  width: clamp(310, 85vw, 356px);
+  width: clamp(310px, 90vw, 356px);
   height: 222px;
   background-color: #c4c4c4;
   border-radius: 10px;
@@ -345,6 +361,8 @@ body {
   font-family: 'overpass';
   font-weight: 400;
   font-size: 1.4rem;
+
+  width: 65%;
 }
 
 .task-modal-date-input:focus-visible {
@@ -360,6 +378,7 @@ body {
   font-weight: 400;
   font-size: 1.4rem;
   background-color: #ffffff;
+  width: 25%;
 }
 
 .task-modal-priority-input:focus-visible {
