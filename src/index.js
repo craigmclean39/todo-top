@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import './styles/reset.css';
 import './styles/fonts.css';
 import './styles/styles.css';

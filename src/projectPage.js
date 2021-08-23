@@ -33,7 +33,7 @@ export class ProjectPage {
     logo.src = LogoImg;
 
     const title = DomHelper.CreateElement('h1', ['project-title']);
-    title.innerText = 'TASKER';
+    title.innerText = 'TASKY';
 
     header.appendChild(logo);
     header.appendChild(title);
@@ -74,21 +74,19 @@ export class ProjectPage {
   }
 
   AddProject(evt) {
-    //console.dir(evt);
     evt.preventDefault();
-      this._taskManager.AddProject(this.GetProjectModalInput());
+    this._taskManager.AddProject(this.GetProjectModalInput());
 
-      const projects = this._background.querySelector('.project-wrapper');
-      this._background.removeChild(projects);
+    const projects = this._background.querySelector('.project-wrapper');
+    this._background.removeChild(projects);
 
-      this.SetProjects(
-        this._taskManager.GetProjectNames(),
-        this._taskManager.GetProjectIds(),
-        this._taskManager.GetProjectTaskNumbers()
-      );
+    this.SetProjects(
+      this._taskManager.GetProjectNames(),
+      this._taskManager.GetProjectIds(),
+      this._taskManager.GetProjectTaskNumbers()
+    );
 
-      this.HideModal();
-  
+    this.HideModal();
   }
 
   SelectProject(evt) {
@@ -108,7 +106,7 @@ export class ProjectPage {
     this._addProjectModal = DomHelper.CreateElement('div', ['project-modal']);
 
     this._addProjectForm = DomHelper.CreateElement('form');
-    //this._addProjectForm.onSubmit = 
+
     const projectNameInput = DomHelper.CreateElement('input', [
       'project-modal-text-input',
     ]);
@@ -131,6 +129,7 @@ export class ProjectPage {
     ]);
 
     addButton.innerText = 'OK';
+    addButton.type = 'submit';
     cancelButton.innerText = 'CANCEL';
     cancelButton.type = 'button';
 

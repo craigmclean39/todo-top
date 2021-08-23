@@ -38,7 +38,7 @@ export class TaskPage {
     this._projectId = projectId;
     this._tasks = tasks;
 
-    const title = this._background.querySelector('.project-title');
+    const title = this._background.querySelector('.task-title');
     title.innerText = projectName.toUpperCase();
   }
 
@@ -306,7 +306,7 @@ export class TaskPage {
     backBtn.src = BackArrow;
     backBtn.addEventListener('click', this.GoBackToProjectPage);
 
-    const title = DomHelper.CreateElement('h1', ['project-title']);
+    const title = DomHelper.CreateElement('h1', ['task-title']);
     title.innerText = 'Project Title';
 
     header.appendChild(backBtn);
@@ -337,13 +337,15 @@ export class TaskPage {
     ]);
     this._addTaskModal = DomHelper.CreateElement('div', ['add-task-modal']);
 
+    this._addTaskForm = DomHelper.CreateElement('form');
     const taskNameInput = DomHelper.CreateElement('input', [
       'task-modal-name-input',
     ]);
     taskNameInput.type = 'text';
     taskNameInput.placeholder = 'Task Name...';
-    taskNameInput.maxLength = 40;
-    this._addTaskModal.appendChild(taskNameInput);
+    taskNameInput.maxLength = 15;
+    taskNameInput.required = true;
+    this._addTaskForm.appendChild(taskNameInput);
 
     const taskDescInput = DomHelper.CreateElement('textarea', [
       'task-modal-desc-input',
@@ -351,7 +353,7 @@ export class TaskPage {
     taskDescInput.resize = 'none';
     taskDescInput.placeholder = 'Description...';
     taskDescInput.maxLength = 400;
-    this._addTaskModal.appendChild(taskDescInput);
+    this._addTaskForm.appendChild(taskDescInput);
 
     const taskDatePriorityWrapper = DomHelper.CreateElement('div', [
       'task-modal-datepriority-wrapper',
@@ -395,7 +397,7 @@ export class TaskPage {
 
     taskDatePriorityWrapper.appendChild(priorityInput);
 
-    this._addTaskModal.appendChild(taskDatePriorityWrapper);
+    this._addTaskForm.appendChild(taskDatePriorityWrapper);
 
     const buttonWrapper = DomHelper.CreateElement('div', [
       'project-modal-button-wrapper',
@@ -410,15 +412,18 @@ export class TaskPage {
     ]);
 
     addButton.innerText = 'OK';
+    addButton.type = 'submit';
     cancelButton.innerText = 'CANCEL';
+    cancelButton.type = 'button';
 
-    addButton.addEventListener('click', this.AddTask);
+    this._addTaskForm.addEventListener('submit', this.AddTask);
     cancelButton.addEventListener('click', this.HideModal);
 
     buttonWrapper.appendChild(cancelButton);
     buttonWrapper.appendChild(addButton);
 
-    this._addTaskModal.appendChild(buttonWrapper);
+    this._addTaskForm.appendChild(buttonWrapper);
+    this._addTaskModal.appendChild(this._addTaskForm);
     this._addTaskModalWrapper.appendChild(this._addTaskModal);
 
     return this._addTaskModalWrapper;
@@ -466,7 +471,8 @@ export class TaskPage {
     ).value = `${formattedDate}T${formattedTime}`;
   }
 
-  AddTask() {
+  AddTask(evt) {
+    evt.preventDefault();
     const input = this.GetTaskModalInput();
 
     if (!this._editingTask) {
