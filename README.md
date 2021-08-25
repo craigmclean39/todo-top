@@ -71,8 +71,10 @@
 
 ## About The Project
 
-<img src="images/example1.png" alt="Logo" width="102" height="182">
-<img src="images/example2.png" alt="Logo" width="102" height="182">
+<p align="center">
+<img src="images/example1.png" alt="Logo" width="204" height="364">
+<img src="images/example2.png" alt="Logo" width="204" height="364">
+</p>
 
 ### Built With
 
@@ -109,6 +111,6 @@ Project Link: [https://github.com/craigmclean39/todo-top](https://github.com/cra
 ## Acknowledgements
 
 - [The Odin Project](https://www.theodinproject.com/)
-- [flaticon](https://www.flaticon.com/)
-- [coolers](https://coolors.co/)
-- [figma](https://www.figma.com/)
+- [Flaticon](https://www.flaticon.com/)
+- [Coolors.co](https://coolors.co/)
+- [Figma](https://www.figma.com/)
