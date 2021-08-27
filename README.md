@@ -80,6 +80,7 @@
 
 - [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 - [CSS](https://developer.mozilla.org/en-US/docs/Web/CSS)
+- [Webpack](https://webpack.js.org/)
 
 <!-- GETTING STARTED -->
 
@@ -114,3 +115,5 @@ Project Link: [https://github.com/craigmclean39/todo-top](https://github.com/cra
 - [Flaticon](https://www.flaticon.com/)
 - [Coolors.co](https://coolors.co/)
 - [Figma](https://www.figma.com/)
+- [Google Fonts](https://fonts.google.com/)
+- [date-fns](https://date-fns.org/)
