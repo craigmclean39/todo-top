@@ -38,13 +38,13 @@ body {
 }
 
 .project-title {
-  font-family: 'Unica One';
+  font-family: "Unica One";
   font-size: 4.8rem;
   color: white;
 }
 
 .task-title {
-  font-family: 'Unica One';
+  font-family: "Unica One";
   font-size: 3rem;
   color: white;
 }
@@ -70,7 +70,7 @@ body {
 .task-wrapper {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
 }
 
 @media (min-width: 802px) {
@@ -136,7 +136,7 @@ body {
 
   border-radius: 0.8rem;
   background-color: #474747;
-  background-image: url('../media/check.svg');
+  background-image: url("../media/check.svg");
   background-size: 2rem 2rem;
   background-repeat: no-repeat;
   background-position: center;
@@ -145,7 +145,7 @@ body {
 }
 
 .project-individual-title {
-  font-family: 'Overpass';
+  font-family: "Overpass";
   font-style: bold;
   font-size: 1.8rem;
   line-height: 2.8rem;
@@ -154,7 +154,7 @@ body {
 }
 
 .task-individual-title {
-  font-family: 'Overpass';
+  font-family: "Overpass";
   font-style: bold;
   font-size: 1.6rem;
   line-height: 2.8rem;
@@ -167,14 +167,14 @@ body {
 }
 
 .task-date {
-  font-family: 'Overpass';
+  font-family: "Overpass";
   font-style: italic;
   font-size: 1.2rem;
   padding-left: 1.3rem;
 }
 
 .project-individual-num-tasks {
-  font-family: 'Overpass';
+  font-family: "Overpass";
   font-style: italic;
   font-size: 1.2rem;
   padding-left: 5rem;
@@ -253,7 +253,7 @@ body {
   margin: auto;
   width: 90%;
   margin-top: 3.2rem;
-  font-family: 'overpass';
+  font-family: "overpass";
   font-style: italic;
   font-weight: 300;
   font-size: 1.4rem;
@@ -278,7 +278,7 @@ body {
   margin-top: 3.1rem;
   height: 4.6rem;
   font-size: 1.8rem;
-  font-family: 'Unica One';
+  font-family: "Unica One";
 }
 
 .project-modal-add-button {
@@ -319,7 +319,7 @@ body {
   margin: auto;
   width: 90%;
   margin-top: 2.4rem;
-  font-family: 'overpass';
+  font-family: "overpass";
   font-style: italic;
   font-weight: 300;
   font-size: 1.4rem;
@@ -337,7 +337,7 @@ body {
   margin: auto;
   width: 90%;
   margin-top: 1.8rem;
-  font-family: 'overpass';
+  font-family: "overpass";
   font-style: italic;
   font-weight: 300;
   font-size: 1.4rem;
@@ -354,7 +354,7 @@ body {
   height: 2.2rem;
   border: solid 1px rgba(0, 0, 0, 0);
 
-  font-family: 'overpass';
+  font-family: "overpass";
   font-weight: 400;
   font-size: 1.4rem;
 
@@ -370,7 +370,7 @@ body {
   border: none;
   height: 2.2rem;
   border: solid 1px rgba(0, 0, 0, 0);
-  font-family: 'overpass';
+  font-family: "overpass";
   font-weight: 400;
   font-size: 1.4rem;
   background-color: #ffffff;
@@ -406,12 +406,12 @@ body {
 }
 
 .delete-task {
-  background-image: url('../media/trash.svg');
+  background-image: url("../media/trash.svg");
   margin-right: 1rem;
 }
 
 .edit-task {
-  background-image: url('../media/edit.svg');
+  background-image: url("../media/edit.svg");
 }
 
 .delete-task:hover,
@@ -446,7 +446,7 @@ body {
 }
 
 .task-description {
-  font-family: 'Overpass';
+  font-family: "Overpass";
   font-size: 1.3rem;
   line-height: 1.3rem;
   margin-left: 0.8rem;
@@ -456,7 +456,7 @@ body {
   width: calc(100% - 1.6rem);
 }
 .task-creation-date {
-  font-family: 'Overpass';
+  font-family: "Overpass";
   font-size: 1.2rem;
   font-style: italic;
   line-height: 1.2rem;
@@ -481,12 +481,12 @@ body {
 }
 
 .task-details-button {
-  background-image: url('../media/arrowdown.svg');
+  background-image: url("../media/arrowdown.svg");
   margin-bottom: 0.4rem;
 }
 
 .task-hide-details-button {
-  background-image: url('../media/arrowup.svg');
+  background-image: url("../media/arrowup.svg");
   margin-bottom: 0.2rem;
   display: none;
 }
